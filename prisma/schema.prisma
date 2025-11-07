@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+model User {
+  id                   String                 @id @default(cuid())
+  name                 String
+  email                String                 @unique
+  emailVerified        DateTime?              @map("email_verified")
+  password             String
+  phoneNumber          String                 @unique
+  gender               Gender
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  VerificationToken    VerificationToken[]
+  PasswordResetToken   PasswordResetToken[]
+
+  @@map("users")
+}
+
+
+model VerificationToken {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  token     String   @unique
+  expiresAt DateTime
+  user      User     @relation(fields: [email], references: [email], onDelete: Cascade)
+
+  @@unique([email, token])
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  expiresAt DateTime
+  user      User     @relation(fields: [email], references: [email], onDelete: Cascade)
+
+  @@unique([email, token])
+}
