@@ -6,11 +6,10 @@ import prisma from "@/lib/prisma";
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, password } = await request.json();
-
+    const { email, password } = (await request.json()).data;
     const user = await prisma.user.findUnique({
       where: {
-        email,
+        email: email,
       },
       select: {
         emailVerified: true,
@@ -32,7 +31,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!(await verifyPassword(password, user.password!))) {
+    if (!(await verifyPassword(user.password!, password))) {
       return new NextResponse("Password is incorrect", { status: 401 });
     }
 

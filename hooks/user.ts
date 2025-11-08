@@ -1,7 +1,8 @@
 "use server";
 
-import { auth, signOut } from "@/auth";
+import { auth, signIn, signOut } from "@/auth";
 import prisma from "@/lib/prisma";
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { User } from "@prisma/client";
 
 export async function getSessionUser() {
@@ -53,6 +54,25 @@ export async function checkUserExistsByEmailAndPhoneNumber(
   });
 }
 
+export async function checkUserExistsByEmail(email: string): Promise<{
+  id: string;
+} | null> {
+  return await prisma.user.findUnique({
+    where: {
+      email: email,
+    },
+    select: {
+      id: true,
+    },
+  });
+}
+
 export async function SignOutUser() {
   await signOut();
+}
+
+export async function socialLogin(provider: "github" | "google") {
+  await signIn(provider, {
+    callbackUrl: DEFAULT_LOGIN_REDIRECT,
+  });
 }

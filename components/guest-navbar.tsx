@@ -19,14 +19,6 @@ export default function GuestNavbar() {
             route: "/",
         },
         {
-            name: "About Us",
-            route: "/guest/about-us",
-        },
-        {
-            name: "Contact Us",
-            route: "/guest/contact-us",
-        },
-        {
             name: "Sign In / Register",
             route: "/guest/Login",
         },
@@ -43,7 +35,7 @@ export default function GuestNavbar() {
                         <div
                             className="group cursor-default inline-flex items-center gap-2 text-lg font-bold tracking-wide text-neutral-900 hover:text-neutral-600 dark:text-neutral-100 dark:hover:text-neutral-300"
                         >
-                            <h1 className='dark:text-neutral-300 text-neutral-600 lg:leading-tighter  tracking-tighter font-bold text-lg'>Flavor Finder</h1>
+                            <h1 className='dark:text-neutral-300 text-neutral-600 lg:leading-tighter  tracking-tighter font-bold text-lg'>Wealth Wise ₹</h1>
                         </div>
                     </div>
 

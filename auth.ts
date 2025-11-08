@@ -1,9 +1,11 @@
 import NextAuth, { type DefaultSession } from "next-auth";
-import { getUserByEmailForPassVerification, getUserByIdForSessionToken } from "@/hooks/user";
+import {
+  getUserByIdForSessionToken,
+} from "@/hooks/user";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import prisma from "@/lib/prisma";
 import Credentials from "next-auth/providers/credentials";
-import { LoginSchema } from "@/lib/guest-form-schemas";
+import { loginSchema } from "@/lib/guest-form-schemas";
 import bcryptjs from "bcryptjs";
 
 export type ExtendedUser = DefaultSession["user"] & {
@@ -73,11 +75,21 @@ export const {
   providers: [
     Credentials({
       async authorize(credentials) {
-        const validatedFields = LoginSchema.safeParse(credentials);
+        const validatedFields = loginSchema.safeParse(credentials);
         if (validatedFields.success) {
           const { email, password } = validatedFields.data;
 
-          const user = await getUserByEmailForPassVerification(email);
+          const user = await prisma.user.findUnique({
+            where: {
+              email: email,
+            },
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              password: true,
+            },
+          });
           if (!user || !user.password) {
             return null;
           }

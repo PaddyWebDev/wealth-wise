@@ -14,21 +14,21 @@ enum Gender {
 }
 
 model User {
-  id                   String                 @id @default(cuid())
-  name                 String
-  email                String                 @unique
-  emailVerified        DateTime?              @map("email_verified")
-  password             String
-  phoneNumber          String                 @unique
-  gender               Gender
-  createdAt            DateTime               @default(now())
-  updatedAt            DateTime               @updatedAt
-  VerificationToken    VerificationToken[]
-  PasswordResetToken   PasswordResetToken[]
+  id                 String               @id @default(cuid())
+  name               String
+  email              String               @unique
+  emailVerified      DateTime?            @map("email_verified")
+  password           String
+  phoneNumber        String               @unique
+  gender             Gender
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  VerificationToken  VerificationToken[]
+  PasswordResetToken PasswordResetToken[]
+  Budget             Budget[]
 
   @@map("users")
 }
-
 
 model VerificationToken {
   id        String   @id @default(cuid())
@@ -49,3 +49,53 @@ model PasswordResetToken {
 
   @@unique([email, token])
 }
+
+// ------------------------------
+// Budget Model (monthly or goal-based)
+// ------------------------------
+model Budget {
+  id            String        @id @default(cuid())
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  month         String
+  totalIncome   Float         @default(0)
+  totalExpenses Float         @default(0)
+  savingsGoal   Float         @default(0)
+  actualSavings Float         @default(0)
+  aiAdvice      String? // AI-generated text
+  incomes       Income[]
+  expenses      Expense[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([userId])
+}
+
+// ------------------------------
+// Income Model
+// ------------------------------
+model Income {
+  id       String   @id @default(cuid())
+  budget   Budget   @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+  budgetId String
+  source   String
+  amount   Float
+  date     DateTime @default(now())
+
+  @@index([budgetId])
+}
+
+// ------------------------------
+// Expense Model
+// ------------------------------
+model Expense {
+  id       String   @id @default(cuid())
+  budget   Budget   @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+  budgetId String
+  category String
+  amount   Float
+  date     DateTime @default(now())
+
+  @@index([budgetId])
+}
+

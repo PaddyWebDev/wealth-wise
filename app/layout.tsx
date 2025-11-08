@@ -11,7 +11,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 const archivo = Archivo({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Notezzy",
+  title: "WealthWise",
   description:
     "Notezzy is a note taking application built with Next.js 14 and Tailwind CSS.",
 };

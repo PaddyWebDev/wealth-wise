@@ -14,7 +14,7 @@ export default async function GuestLayout({ children }: GuestLayoutProps) {
     redirect("/auth/dashboard");
   }
   return (
-    <main className="h-dvh bg-neutral-50 dark:bg-neutral-900 w-full">
+    <main className="h-dvh bg-neutral-50 dark:bg-neutral-950 w-full">
       <Navbar />
       <section className="flex items-center w-full h-[92dvh] justify-center">
         {children}

@@ -2,13 +2,13 @@ import Credentials from "next-auth/providers/credentials";
 import bcryptjs from "bcryptjs";
 import type { NextAuthConfig } from "next-auth";
 import { getUserByEmailForPassVerification } from "@/hooks/user";
-import {LoginSchema} from '@/lib/guest-form-schemas'
+import { loginSchema } from "@/lib/guest-form-schemas";
 
 const AuthConfig: NextAuthConfig = {
   providers: [
     Credentials({
       async authorize(credentials) {
-        const validatedFields = LoginSchema.safeParse(credentials);
+        const validatedFields = loginSchema.safeParse(credentials);
         if (validatedFields.success) {
           const { email, password } = validatedFields.data;
 

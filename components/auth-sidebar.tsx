@@ -36,6 +36,7 @@ type linksType = {
 };
 
 export default function Sidebar({ userId, userName }: SidebarProps) {
+  
   const pathname = usePathname();
 
   const links: linksType[] = [
@@ -45,13 +46,13 @@ export default function Sidebar({ userId, userName }: SidebarProps) {
 
   return (
     <ShadCNSidebar
-      variant="inset"
+      variant="floating"
       collapsible="offcanvas"
       className="min-h-screen bg-neutral-100 dark:bg-neutral-800 shadow-lg rounded-r-lg"
     >
       <SidebarHeader className="border-b border-neutral-200 dark:border-neutral-700 px-4 py-3 ">
         <h2 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
-          Flavor Finder
+          Wealth Wise
         </h2>
       </SidebarHeader>
       <SidebarContent className="px-1 py-6 overflow-y-auto max-h-full">
@@ -140,7 +141,7 @@ export default function Sidebar({ userId, userName }: SidebarProps) {
             <span>
               <User />
             </span>
-            {userName.split(" ")[0]}
+            {userName?.split(" ")[0]}
           </Link>
           <Button
             title="Sign Out"

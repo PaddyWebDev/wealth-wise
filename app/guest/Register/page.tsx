@@ -77,24 +77,6 @@ export default function RegisterForm() {
           form.reset();
         })
         .catch((error: any) => {
-          console.log(error);
-          if ([404, 401, 409].includes(error.status)) {
-            if (error.status === 409) {
-              const { field, message } = error.response.data;
-
-              form.setError(field, {
-                type: "custom",
-                message: message || "Already in use",
-              });
-            } else {
-              form.setError("password", {
-                type: "custom",
-                message: error?.response?.data || "Invalid credentials",
-              });
-            }
-
-            return;
-          }
           toast.error(error.response.data || "Error Occurred");
         });
     });
@@ -126,7 +108,8 @@ export default function RegisterForm() {
                           placeholder="John Doe"
                           disabled={isPending}
                           {...field}
-                          className="bg-neutral-50 border-neutral-300"
+                          className="bg-neutral-50 border-neutral-300 dark:bg-neutral-950 dark:border-neutral-950"
+
                         />
                       </FormControl>
                       <FormMessage />
@@ -144,7 +127,8 @@ export default function RegisterForm() {
                           placeholder="your.email@example.com"
                           disabled={isPending}
                           {...field}
-                          className="bg-neutral-50 border-neutral-300"
+                          className="bg-neutral-50 border-neutral-300 dark:bg-neutral-950 dark:border-neutral-950"
+
                         />
                       </FormControl>
                       <FormMessage />
@@ -163,7 +147,8 @@ export default function RegisterForm() {
                           placeholder="1234567890"
                           disabled={isPending}
                           {...field}
-                          className="bg-neutral-50 border-neutral-300"
+                          className="bg-neutral-50 border-neutral-300 dark:bg-neutral-950 dark:border-neutral-950"
+
                         />
                       </FormControl>
                       <FormMessage />
@@ -183,7 +168,8 @@ export default function RegisterForm() {
                           disabled={isPending}
                           {...field}
                         >
-                          <SelectTrigger className="bg-neutral-50 border-neutral-300">
+                          <SelectTrigger className="bg-neutral-50 border-neutral-300 dark:bg-neutral-950 dark:border-neutral-950"
+                          >
                             <SelectValue placeholder="Select your gender" />
                           </SelectTrigger>
                           <SelectContent>
@@ -212,7 +198,8 @@ export default function RegisterForm() {
                           placeholder="*********"
                           disabled={isPending}
                           {...field}
-                          className="bg-neutral-50 border-neutral-300"
+                          className="bg-neutral-50 border-neutral-300 dark:bg-neutral-950 dark:border-neutral-950"
+
                         />
                       </FormControl>
                       <FormMessage />
@@ -231,7 +218,7 @@ export default function RegisterForm() {
                           type={passwordState ? "text" : "password"}
                           disabled={isPending}
                           {...field}
-                          className="bg-neutral-50 border-neutral-300"
+                          className="bg-neutral-50 border-neutral-300 dark:bg-neutral-950 dark:border-neutral-950"
                         />
                       </FormControl>
                       <FormMessage />
@@ -257,7 +244,7 @@ export default function RegisterForm() {
                   type="submit"
                   disabled={isPending}
                   size={"lg"}
-                  className="bg-neutral-800 hover:bg-neutral-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 w-full md:w-auto"
+                // className="bg-neutral-800 hover:bg-neutral-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 w-full md:w-auto"
                 >
                   {isPending ? "Registering..." : "Register Now"}
                 </Button>
