@@ -42,20 +42,7 @@ export default function ResetPassword() {
                 return;
             }
 
-
-
-
-            if (validatedFields.data.confirmPassword !== validatedFields.data.newPassword) {
-                updatePasswordForm.setError("confirmPassword", {
-                    message: "Passwords Doesn't Match"
-                })
-                return;
-            }
-
-            const { data } = validatedFields;
-            await axios.patch(`/api/password/reset?token=${token}`, {
-                data
-            }).then((data) => {
+            await axios.patch(`/api/password/reset?token=${token}`, validatedFields.data).then((data) => {
                 toast.success(data.data)
                 updatePasswordForm.reset();
                 router.push("/guest/Login")

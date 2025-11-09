@@ -26,10 +26,10 @@ export default function BudgetTracker() {
         },
     });
 
-    
 
 
-    if (budgetLoading ) {
+
+    if (budgetLoading) {
         return <Loader />;
     }
 
@@ -76,8 +76,8 @@ export default function BudgetTracker() {
                 </Card>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <AddIncomeForm />
-                    <AddExpenseForm />
+                    <AddIncomeForm budgetId={Id as string} />
+                    <AddExpenseForm budgetId={Id as string} />
                 </div>
 
             </div>

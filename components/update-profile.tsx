@@ -1,54 +1,82 @@
 "use client"
 
-import React, { useState } from 'react'
+import React from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { updatePasswordSchema, UpdatePasswordFormData } from '@/lib/auth-form-schemas'
+import { updateProfileSchema, UpdateProfileFormData } from '@/lib/auth-form-schemas'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { Skeleton } from '@/components/ui/skeleton'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
-import { Checkbox } from '@/components/ui/checkbox'
 import axios from 'axios'
+import { useSessionContext } from '@/context/session'
+import { useSession } from 'next-auth/react'
 
-interface UpdatePasswordPageProps {
-  params: {
-    Id: string
+interface updateProfile {
+  userData: {
+    name: string,
+    email: string,
+    phoneNumber: string
   }
 }
-
-export default function UpdatePasswordPage({ params }: UpdatePasswordPageProps) {
-  const [passwordState, setPasswordState] = useState(false)
+export default function UpdateProfile({ userData }: updateProfile) {
+  const { session } = useSessionContext();
+  const { update } = useSession();
   const [isPending, startTransition] = React.useTransition();
   const router = useRouter()
 
-  const form = useForm<UpdatePasswordFormData>({
-    resolver: zodResolver(updatePasswordSchema),
+  const form = useForm<UpdateProfileFormData>({
+    resolver: zodResolver(updateProfileSchema),
     defaultValues: {
-      currentPassword: '',
-      newPassword: '',
-      confirmPassword: '',
+      name: userData?.name,
+      email: userData?.email,
+      phoneNumber: userData?.phoneNumber
     },
   })
 
-  const onSubmit = async (data: UpdatePasswordFormData) => {
+  if (!userData || userData === null) {
+    router.push("/auth/dashboard")
+  }
+
+
+
+
+  const onSubmit = async (formData: UpdateProfileFormData) => {
     startTransition(async function () {
       try {
-        // Simulate API call
-        const validatedFields = updatePasswordSchema.safeParse(data);
-        if (validatedFields.error || !validatedFields.data) {
-          toast.error('failed to validate the fields');
+        const validatedFields = updateProfileSchema.safeParse(formData);
+        if (!validatedFields.data || validatedFields.error) {
+          toast.error("Failed to validate fields")
           return;
         }
-        const response = await axios.patch(`/api/password/update?userId=${params.Id}`, validatedFields.data)
+
+        const isSame =
+          validatedFields.data.name === userData.name ||
+          validatedFields.data.email === userData.email ||
+          validatedFields.data.phoneNumber === userData.phoneNumber
+        if (isSame) {
+          toast.error("Modify the data to update");
+          return;
+        }
+
+
+        const response = await axios.patch(`/api/update-user?userId=${session?.user.id}`, validatedFields.data)
         console.log(response.data);
-        toast.success('Password updated successfully!')
+
+        toast.success('Profile updated successfully!')
+        await update({
+          ...session,
+          user: {
+            name: validatedFields.data.name,
+            email: validatedFields.data.email,
+            ...session?.user,
+          },
+        })
         router.push('/auth/profile')
       } catch (error) {
-        toast.error('Failed to update password')
+        toast.error('Failed to update profile')
       }
     })
   }
@@ -56,24 +84,23 @@ export default function UpdatePasswordPage({ params }: UpdatePasswordPageProps) 
   return (
     <section className="container mx-auto p-6 bg-neutral-50 dark:bg-neutral-900 min-h-fit">
       <div className="max-w-md mx-auto">
-        <Card className="bg-white dark:bg-neutral-800 shadow-lg mt-[10dvh]  ">
+        <Card className="bg-white dark:bg-neutral-800 shadow-lg mt-[10dvh]">
           <CardHeader>
-            <CardTitle className="text-neutral-800 dark:text-neutral-200">Update Password</CardTitle>
+            <CardTitle className="text-neutral-800 dark:text-neutral-200 text-3xl font-bold">Update Profile</CardTitle>
           </CardHeader>
           <CardContent>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 <FormField
                   control={form.control}
-                  name="currentPassword"
+                  name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-neutral-700 dark:text-neutral-300">Current Password</FormLabel>
+                      <FormLabel className="text-neutral-700 dark:text-neutral-300">Name</FormLabel>
                       <FormControl>
                         <Input
-                          type={passwordState ? 'text' : "password"}
+                          placeholder="Enter your name"
                           disabled={isPending}
-                          placeholder="Enter current password"
                           className="bg-neutral-50 dark:bg-neutral-950 border-neutral-300 dark:border-neutral-900"
                           {...field}
                         />
@@ -84,17 +111,16 @@ export default function UpdatePasswordPage({ params }: UpdatePasswordPageProps) 
                 />
                 <FormField
                   control={form.control}
-                  name="newPassword"
+                  name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-neutral-700 dark:text-neutral-300">New Password</FormLabel>
+                      <FormLabel className="text-neutral-700 dark:text-neutral-300">Email</FormLabel>
                       <FormControl>
                         <Input
-                          type={passwordState ? 'text' : "password"}
-                          placeholder="Enter new password"
-                          className="bg-neutral-50 dark:bg-neutral-950 border-neutral-300 dark:border-neutral-900"
+                          type="email"
                           disabled={isPending}
-
+                          placeholder="Enter your email"
+                          className="bg-neutral-50 dark:bg-neutral-950 border-neutral-300 dark:border-neutral-900"
                           {...field}
                         />
                       </FormControl>
@@ -104,15 +130,16 @@ export default function UpdatePasswordPage({ params }: UpdatePasswordPageProps) 
                 />
                 <FormField
                   control={form.control}
-                  name="confirmPassword"
+                  name="phoneNumber"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-neutral-700 dark:text-neutral-300">Confirm New Password</FormLabel>
+                      <FormLabel className="text-neutral-700 dark:text-neutral-300">Phone Number</FormLabel>
                       <FormControl>
                         <Input
-                          type={passwordState ? 'text' : "password"}
+                          type="text"
+                          inputMode='numeric'
                           disabled={isPending}
-                          placeholder="Confirm new password"
+                          placeholder="Enter your email"
                           className="bg-neutral-50 dark:bg-neutral-950 border-neutral-300 dark:border-neutral-900"
                           {...field}
                         />
@@ -121,24 +148,11 @@ export default function UpdatePasswordPage({ params }: UpdatePasswordPageProps) 
                     </FormItem>
                   )}
                 />
-
-                <div>
-                  <div className="flex items-center space-x-2">
-                    <Checkbox onClick={() => setPasswordState(!passwordState)} id="showPassword" />
-                    <label
-                      htmlFor="showPassword"
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
-                      Show Password
-                    </label>
-                  </div>
-                </div>
                 <Button
                   type="submit"
                   disabled={isPending}
-                  className="w-full "
                 >
-                  {isPending ? 'Updating...' : 'Update Password'}
+                  {isPending ? 'Updating...' : 'Update Profile'}
                 </Button>
               </form>
             </Form>

@@ -8,6 +8,7 @@ import {
   SidebarInset,
 } from "@/components/ui/sidebar";
 import { redirect } from "next/navigation";
+import ThemeSwitcher from "@/components/theme-switcher";
 
 interface AuthLayoutProps {
   children: React.ReactNode;
@@ -32,11 +33,15 @@ export default async function AuthLayout({ children }: AuthLayoutProps) {
           {/* Main content area with trigger */}
           <SidebarInset className=" bg-neutral-50 dark:bg-neutral-900">
             {/* Trigger should be visible at the top-left of content */}
-            <header className="p-3 border-b border-neutral-200 dark:border-neutral-800 flex items-center gap-3">
-              <SidebarTrigger />
-              <h1 className="text-lg font-semibold text-neutral-800 dark:text-neutral-200">
-                Wealth Wise
-              </h1>
+            <header className="py-2 pl-3  pr-6 border-b border-neutral-200 dark:border-neutral-800 flex items-center gap-3 justify-between">
+              <div className="flex flew-row items-center gap-2">
+                <SidebarTrigger />
+                <h1 className="text-lg font-semibold text-neutral-800 dark:text-neutral-200">
+                  Wealth Wise
+                </h1>
+              </div>
+
+              <ThemeSwitcher />
             </header>
 
             {/* Page content */}

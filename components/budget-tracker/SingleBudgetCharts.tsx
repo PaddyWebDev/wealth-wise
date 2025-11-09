@@ -1,7 +1,7 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { PieChart, Pie, Cell, ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
 import { Budget, Expense, Income } from '@prisma/client';
 
@@ -46,15 +46,21 @@ export function SingleBudgetCharts({ budget }: SingleBudgetChartsProps) {
     return acc;
   }, []);
 
-  // Line chart data: income vs expenses (simplified for single budget)
-  const monthlyData = [
+  // Bar chart data for budget summary (single month)
+  const summaryData = [
     {
       month: new Date(budget.month + '-01').toLocaleDateString('en-US', { month: 'short' }),
-      income: budget.totalIncome,
-      expenses: budget.totalExpenses,
-      savings: budget.actualSavings,
+      income: budget.totalIncome || 0,
+      expenses: budget.totalExpenses || 0,
+      savings: budget.actualSavings || 0,
     },
   ];
+
+  const maxValue = Math.max(
+    budget.totalIncome || 0,
+    budget.totalExpenses || 0,
+    budget.actualSavings || 0
+  );
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -90,18 +96,18 @@ export function SingleBudgetCharts({ budget }: SingleBudgetChartsProps) {
         <CardHeader>
           <CardTitle className="text-neutral-900 dark:text-white">Budget Summary</CardTitle>
         </CardHeader>
-        <CardContent>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={monthlyData}>
+        <CardContent className="h-[350px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={summaryData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
               <XAxis dataKey="month" stroke="#6B7280" />
-              <YAxis stroke="#6B7280" />
+              <YAxis type="number" stroke="#6B7280" domain={[0, maxValue + 500]} />
               <Tooltip />
-              <Legend />
-              <Line type="monotone" dataKey="income" stroke="#36A2EB" strokeWidth={2} name="Income" />
-              <Line type="monotone" dataKey="expenses" stroke="#FF6384" strokeWidth={2} name="Expenses" />
-              <Line type="monotone" dataKey="savings" stroke="#FFCE56" strokeWidth={2} name="Savings" />
-            </LineChart>
+              <Legend verticalAlign="top" height={40} />
+              <Bar dataKey="income" fill="#36A2EB" name="Income" barSize={30} />
+              <Bar dataKey="expenses" fill="#FF6384" name="Expenses" barSize={30} />
+              <Bar dataKey="savings" fill="#FFCE56" name="Savings" barSize={30} />
+            </BarChart>
           </ResponsiveContainer>
         </CardContent>
       </Card>

@@ -56,22 +56,12 @@ export default function RegisterForm() {
         return;
       }
 
-      if (
-        validatedFields.data.password !== validatedFields.data.confirmPassword
-      ) {
-        form.setError("confirmPassword", {
-          type: "custom",
-          message: "Password Doesn't Match",
-        });
-
-        return;
-      }
 
       await axios
         .post("/api/register", validatedFields)
         .then((data: any) => {
           toast.success(
-            "Regisration Success, you'll shortly receive a confirmation email"
+            "Registration Success, you'll shortly receive a confirmation email"
           );
 
           form.reset();

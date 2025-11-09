@@ -13,8 +13,10 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { Budget } from '@prisma/client';
 
-
-export function AddIncomeForm() {
+export interface AddIncomeExpenseProps {
+  budgetId: string
+}
+export function AddIncomeForm({ budgetId }: AddIncomeExpenseProps) {
   const queryClient = useQueryClient();
 
   const form = useForm<AddIncomeFormData>({
@@ -28,7 +30,10 @@ export function AddIncomeForm() {
 
   const addIncomeMutation = useMutation({
     mutationFn: async (data: any) => {
-      const response = await axios.post('/api/incomes', data);
+      const response = await axios.post('/api/incomes', {
+        budgetId: budgetId,
+        ...data
+      });
       return response.data;
     },
     onSuccess: () => {

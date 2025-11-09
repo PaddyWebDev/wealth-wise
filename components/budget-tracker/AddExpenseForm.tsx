@@ -11,11 +11,12 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import React from 'react';
-import {AddExpenseFormData , addExpenseSchema} from '@/lib/auth-form-schemas'
+import { AddExpenseFormData, addExpenseSchema } from '@/lib/auth-form-schemas'
+import { AddIncomeExpenseProps } from './AddIncomeForm';
 
 
 
-export function AddExpenseForm() {
+export function AddExpenseForm({ budgetId }: AddIncomeExpenseProps) {
   const [isPending, startTransition] = React.useTransition();
   const form = useForm<AddExpenseFormData>({
     resolver: zodResolver(addExpenseSchema),
@@ -31,6 +32,7 @@ export function AddExpenseForm() {
   const addExpenseMutation = useMutation({
     mutationFn: async (data: AddExpenseFormData) => {
       const response = await axios.post('/api/expenses', {
+        budgetId: budgetId,
         ...data,
         amount: data.amount,
         date: data.date || undefined,
@@ -65,7 +67,7 @@ export function AddExpenseForm() {
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-         
+
             <FormField
               control={form.control}
               name="category"
@@ -86,18 +88,13 @@ export function AddExpenseForm() {
               name="amount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Amount</FormLabel>
+                  <FormLabel >Amount</FormLabel>
                   <FormControl>
                     <Input
-                      type="number"
-                      step="0.01"
+                      type="text"
                       placeholder="0.00"
-                      disabled={isPending}
                       className="bg-white dark:bg-neutral-950 border-neutral-300 dark:border-neutral-900 text-neutral-900 dark:text-white"
-
-
                       {...field}
-                      onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
                     />
                   </FormControl>
                   <FormMessage />

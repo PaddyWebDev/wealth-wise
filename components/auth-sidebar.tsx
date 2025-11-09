@@ -41,21 +41,20 @@ export default function Sidebar({ userId, userName }: SidebarProps) {
 
   const links: linksType[] = [
     { href: "/auth/dashboard", label: "Dashboard", icon: Home },
-    { href: "/auth/recipes/search", label: "Search Recipes", icon: Search },
   ];
 
   return (
     <ShadCNSidebar
       variant="floating"
       collapsible="offcanvas"
-      className="min-h-screen bg-neutral-100 dark:bg-neutral-800 shadow-lg rounded-r-lg"
+      className="min-h-dvh  shadow-lg  p-0 "
     >
       <SidebarHeader className="border-b border-neutral-200 dark:border-neutral-700 px-4 py-3 ">
         <h2 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
           Wealth Wise
         </h2>
       </SidebarHeader>
-      <SidebarContent className="px-1 py-6 overflow-y-auto max-h-full">
+      <SidebarContent className=" overflow-y-auto max-h-full dark:bg-neutral-950 ">
         <SidebarGroup>
           <nav className="flex flex-col space-y-3 bg-neutral-100 dark:bg-neutral-800 px-2 py-2 rounded-xl shadow-md">
             {links.map((link, id) => (
@@ -79,7 +78,7 @@ export default function Sidebar({ userId, userName }: SidebarProps) {
             {pathname === "/auth/profile" ? (
               <>
                 <Link
-                  href={`/auth/profile/update/${userId}`}
+                  href={`/auth/profile/update/`}
                   className={cn(
                     "px-3 py-2 rounded-md flex items-center gap-2 text-sm font-medium transition-colors",
                     pathname === `/auth/profile/update/${userId}`

@@ -9,7 +9,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
-import { getSessionUser } from '@/hooks/user';
 
 export default function Dashboard() {
   const { data: budgets, isLoading, error } = useQuery({
@@ -49,9 +48,7 @@ export default function Dashboard() {
     <div className="p-6 space-y-6 bg-neutral-50 dark:bg-neutral-900 min-h-screen">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold text-neutral-900 dark:text-white">Dashboard</h1>
-        <Button asChild className="bg-neutral-800 hover:bg-neutral-700 text-white">
-          <Link href="/auth/budget-tracker">View Budget Tracker</Link>
-        </Button>
+      
       </div>
 
       {/* Investment Details */}
@@ -96,7 +93,7 @@ export default function Dashboard() {
                   <p className="text-neutral-600 dark:text-neutral-400">Expenses: ${budget.totalExpenses.toFixed(2)}</p>
                   <p className="text-neutral-600 dark:text-neutral-400">Savings Goal: ${budget.savingsGoal.toFixed(2)}</p>
                   <p className="text-neutral-600 dark:text-neutral-400">Actual Savings: ${budget.actualSavings.toFixed(2)}</p>
-                  <Button asChild className="mt-4 bg-neutral-800 hover:bg-neutral-700 text-white">
+                  <Button asChild>
                     <Link href={`/auth/budget-tracker/${budget.id}`}>View Details</Link>
                   </Button>
                 </CardContent>
