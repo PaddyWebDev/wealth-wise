@@ -32,8 +32,8 @@ export async function PATCH(request: NextRequest) {
     }
 
     if (
-      user?.email === data.email ||
-      data.phoneNumber === user?.phoneNumber ||
+      user?.email === data.email &&
+      data.phoneNumber === user?.phoneNumber &&
       data.name === user?.name
     ) {
       return new NextResponse("Modify the data to update", { status: 400 });

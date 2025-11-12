@@ -54,3 +54,10 @@ export const updatePasswordSchema = z
   });
 
 export type UpdatePasswordFormData = z.infer<typeof updatePasswordSchema>;
+
+
+export const chatFormSchema = z.object({
+  query: z.string().min(1, "Query is required").max(500, "Query should be maximum 500 characters")
+})
+
+export type ChatFormType = z.infer<typeof chatFormSchema>

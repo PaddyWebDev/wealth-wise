@@ -56,9 +56,7 @@ export async function checkUserExistsByEmailAndPhoneNumber(
   return await prisma.user.findUnique({
     where: {
       email: email,
-      AND: {
-        phoneNumber: phoneNumber,
-      },
+      OR: [{ email: email }, { phoneNumber: phoneNumber }],
     },
     select: {
       id: true,

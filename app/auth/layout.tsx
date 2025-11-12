@@ -23,7 +23,7 @@ export default async function AuthLayout({ children }: AuthLayoutProps) {
   return (
     <SidebarProvider>
       <SessionProvider session={session}>
-        <main className="flex h-screen dark:bg-neutral-950">
+        <main className="flex h-dvh w-dvw   dark:bg-neutral-950">
           {/* Sidebar */}
           <Sidebar
             userId={session.user.id!}

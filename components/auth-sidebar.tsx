@@ -18,10 +18,12 @@ import {
   Lightbulb,
   LogOut,
   LucideIcon,
+  MessageCircleMore,
   Search,
   User,
   UserCog,
   UserPen,
+  
 } from "lucide-react";
 
 interface SidebarProps {
@@ -41,6 +43,7 @@ export default function Sidebar({ userId, userName }: SidebarProps) {
 
   const links: linksType[] = [
     { href: "/auth/dashboard", label: "Dashboard", icon: Home },
+    { href: "/auth/investment-chat", label: "ChatBot", icon: MessageCircleMore  },
   ];
 
   return (

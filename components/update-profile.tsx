@@ -53,8 +53,8 @@ export default function UpdateProfile({ userData }: updateProfile) {
         }
 
         const isSame =
-          validatedFields.data.name === userData.name ||
-          validatedFields.data.email === userData.email ||
+          validatedFields.data.name === userData.name &&
+          validatedFields.data.email === userData.email &&
           validatedFields.data.phoneNumber === userData.phoneNumber
         if (isSame) {
           toast.error("Modify the data to update");

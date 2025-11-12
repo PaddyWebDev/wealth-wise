@@ -26,6 +26,7 @@ model User {
   VerificationToken  VerificationToken[]
   PasswordResetToken PasswordResetToken[]
   Budget             Budget[]
+  ChatMessage        ChatMessage[]
 
   @@map("users")
 }
@@ -97,5 +98,19 @@ model Expense {
   date     DateTime @default(now())
 
   @@index([budgetId])
+}
+
+// ------------------------------
+// Chat Message Model
+// ------------------------------
+model ChatMessage {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  message   String
+  response  String
+  createdAt DateTime @default(now())
+
+  @@index([userId])
 }
 
