@@ -24,33 +24,30 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Prepare context for AI
-    const context = {
-      budgets: budgets.map((b) => ({
-        month: b.month,
-        totalIncome: b.totalIncome,
-        totalExpenses: b.totalExpenses,
-        savingsGoal: b.savingsGoal,
-        actualSavings: b.actualSavings,
-        incomes: b.incomes.map((i) => ({
-          source: i.source,
-          amount: i.amount,
-          date: i.date,
-        })),
-        expenses: b.expenses.map((e) => ({
-          category: e.category,
-          amount: e.amount,
-          date: e.date,
-        })),
-      })),
-    };
+    const financialSummary = budgets
+      .map((b) => {
+        return `Month: ${b.month}, Income: ₹${b.totalIncome}, Expenses: ₹${b.totalExpenses}, Savings Goal: ₹${b.savingsGoal}, Actual Savings: ₹${b.actualSavings}.`;
+      })
+      .join(" ");
 
     // Call Google Gemini for response
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-    const prompt = `You are a financial advisor AI. Respond to investment queries based on the user's financial data. Provide advice on investments, savings, budgeting, etc. Use the provided data to give personalized responses. Keep responses helpful, accurate, and neutral.
-                    User query: ${query}
-                    User financial data: ${JSON.stringify(context)}
-    `;
+
+    const prompt = `You are a financial advisor AI. The user has the following financial summary: ${financialSummary}.
+        Guidelines:
+        1. Do NOT provide direct buy/sell recommendations for individual stocks.
+        2. If the user asks about specific stocks, instead provide:
+          - Sector analysis (e.g., IT, Pharma, Banking) with trends and growth potential
+          - Investment options aligned with the sector (mutual funds, ETFs, index funds)
+          - Recommendations tailored to the user's financial capacity, including income, savings, and risk profile
+        3. Provide personalized recommendations on:
+          - Investment options suitable for their savings and income
+          - Ways to improve savings
+          - Budgeting tips
+        4. Focus strictly on their financial context and prioritize advice that is actionable yet safe.
+        5. If the user asks about unrelated topics or requests specific stock picks, politely inform them that you cannot provide advice in that domain.
+
+        User query: ${query}`;
 
     const result = await model.generateContent(prompt);
     const aiResponse =
@@ -67,6 +64,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ response: aiResponse });
   } catch (error) {
+    console.log(error)
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }
