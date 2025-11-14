@@ -56,23 +56,24 @@ export default function Chat({ userId }: { userId: string }) {
   }
 
   return (
-    <Card className="w-full max-w-2xl mx-auto bg-neutral-50 border-neutral-200 dark:bg-neutral-800 dark:border-neutral-900">
+    <Card className="w-full  mx-auto bg-neutral-50 border-neutral-200 dark:bg-neutral-800 dark:border-neutral-900">
       <CardHeader>
         <CardTitle className="text-neutral-800 dark:text-neutral-50">
           Investment Advisor Chat
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <ScrollArea className="h-[50dvh] mb-4 p-4 border rounded bg-neutral-50 dark:bg-neutral-950">
+      <CardContent className="relative ">
+        <ScrollArea className="h-[68dvh]  mb-4 p-4 rounded bg-neutral-50 dark:bg-neutral-950">
           {data.map((msg: any) => (
             <div key={msg.id} className="mb-4">
-              <div className="mb-2 p-2 rounded bg-neutral-100 dark:bg-neutral-800 text-right">
+              <div className="mb-2 p-2 rounded bg-neutral-100 dark:bg-neutral-800 w-10/12  text-right">
                 <p className="text-neutral-800 dark:text-neutral-100 ">
                   {msg.message}
                 </p>
               </div>
-              <div className="p-2 rounded bg-neutral-100 dark:bg-neutral-800 text-justify">
-                <p className="text-neutral-800 dark:text-neutral-200">
+              <div className="rounded bg-neutral-100 dark:bg-neutral-800 w-10/12 px-6 py-3 text-justify">
+                <h1 className="text-xl font-bold mb-3">AI reponse</h1>
+                <p className="text-neutral-800 dark:text-neutral-200 ">
                   {msg.response}
                 </p>
               </div>
@@ -85,7 +86,7 @@ export default function Chat({ userId }: { userId: string }) {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleChatSubmit)}
-            className="flex gap-2"
+            className="flex gap-2 absolute mb-10 w-11/12  mx-auto bottom-35 up-75 left-0 right-0   "
           >
             <FormField
               control={form.control}
