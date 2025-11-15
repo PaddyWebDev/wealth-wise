@@ -1,8 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { GoogleGenerativeAI } from "@google/generative-ai";
-  
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY!);
+import { GoogleGenAI } from "@google/genai";
+
+// Initialize Gemini
+const genAI = new GoogleGenAI({ apiKey: process.env.GOOGLE_GEMINI_API_KEY! });
+
+// Format Gemini response
+function formatAIResponse(response: string): string {
+  response = response.replace(/\*\*(.*?)\*\*/g, "**$1**");
+  response = response.replace(/^\* /gm, "- ");
+  response = response.replace(/\n\n/g, "\n\n");
+  return response;
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -10,18 +19,16 @@ export async function POST(request: NextRequest) {
     if (!userId) {
       return new NextResponse("UserId is required", { status: 400 });
     }
+
     const { query } = await request.json();
     if (!query) {
       return NextResponse.json({ error: "Query is required" }, { status: 400 });
     }
 
-    // Fetch user's financial data
+    // Fetch user's saved financial data
     const budgets = await prisma.budget.findMany({
       where: { userId: userId },
-      include: {
-        incomes: true,
-        expenses: true,
-      },
+      include: { incomes: true, expenses: true },
     });
 
     const financialSummary = budgets
@@ -30,33 +37,45 @@ export async function POST(request: NextRequest) {
       })
       .join(" ");
 
-    // Call Google Gemini for response
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-
     const prompt = `
-        You are a financial guidance AI. Use the user's financial summary: ${financialSummary}.
-        Rules:
-        1. Do NOT give direct stock buy/sell advice.
-        2. If the user asks about specific stocks or sectors:
-          - Provide short sector insights (IT, Pharma, Banking, etc.).
-          - Suggest safer alternatives: index funds, ETFs, sector mutual funds.
-        3. Give concise, practical recommendations based on the user’s income, savings, and risk comfort.
-        4. Keep answers short, structured, and actionable — avoid long paragraphs.
-        5. If the question is outside personal finance, politely decline.
-        6. Always prioritize safe, beginner-friendly financial guidance.
+          You are a financial guidance AI.  
+          User financial summary: ${financialSummary}.  
+          Rules:
+          1. Provide detailed suggestion for user's query but keep content short & informative.
+          2. Do NOT give direct buy/sell advice.
+          3. If asked about best stocks or sectors:
+            - List examples of well-performing stocks from dynamic list.
+          4. Add a disclaimer:
+            "Please note that I do not directly recommend investing in any specific stocks. Conduct your own study and research before making any investment decisions."
 
-        User query: ${query}
-        `;
+          User query: ${query}
+          `;
 
-    const result = await model.generateContent(prompt);
-    let aiResponse =
-      result.response.text() || "Sorry, I could not generate a response.";
+    const model = genAI.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: [
+        {
+          role: "user",
+          parts: [{ text: prompt }],
+        },
+      ],
+      config: {
+        tools: [
+          {
+            googleSearch: {},
+          },
+        ],
+      },
+    });
 
+    let aiResponse = (await model).text || "Unable to generate a response.";
 
-    // Save chat message to database
+    aiResponse = formatAIResponse(aiResponse);
+
+    // Save chat message
     await prisma.chatMessage.create({
       data: {
-        userId: userId,
+        userId,
         message: query,
         response: aiResponse,
       },
