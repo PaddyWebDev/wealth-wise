@@ -48,7 +48,7 @@ export default function RecommendPage() {
                     return;
                 }
 
-                toast.info("this system is under development")
+                toast.success("this system is under development")
 
                 // const response = await axios.post("http://127.0.0.1:5000/recommend", {
                 //     "min_sip": parseFloat(validatedData.data.min_sip),
