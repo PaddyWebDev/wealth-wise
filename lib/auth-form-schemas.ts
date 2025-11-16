@@ -55,9 +55,38 @@ export const updatePasswordSchema = z
 
 export type UpdatePasswordFormData = z.infer<typeof updatePasswordSchema>;
 
-
 export const chatFormSchema = z.object({
-  query: z.string().min(1, "Query is required").max(500, "Query should be maximum 500 characters")
-})
+  query: z
+    .string()
+    .min(1, "Query is required")
+    .max(500, "Query should be maximum 500 characters"),
+});
 
-export type ChatFormType = z.infer<typeof chatFormSchema>
+export type ChatFormType = z.infer<typeof chatFormSchema>;
+
+export const recommendSchema = z.object({
+  min_sip: z
+    .string()
+    .regex(
+      /^(100|[1-9]\d{2}|[12]\d{3}|3000)$/,
+      "SIP must be between ₹100 and ₹3000"
+    ),
+  required_return: z
+    .string()
+    .regex(
+      /^(?:[1-9](?:\.\d+)?|[12][0-9](?:\.\d+)?|30(?:\.0+)?)$/,
+      "Please enter a valid return between 1% and 30%"
+    )
+    .min(1, "Minimum return should be at least 1%")
+    .max(30, "Maximum allowed return is 30%")
+    .refine(
+      (str) => Number(str) >= 1 && Number(str) <= 30,
+      "Return must be valid number between 1 and 30"
+    ),
+
+  risk_level: z.string().min(1, "Risk level is required"),
+
+  category: z.string().min(1, "Category is required"),
+});
+
+export type recommendationFormType = z.infer<typeof recommendSchema>;

@@ -54,11 +54,11 @@ export default function Dashboard() {
       {/* Investment Details */}
       <Card className="bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700">
         <CardHeader>
-          <CardTitle className="text-neutral-900 dark:text-white">Investment Details</CardTitle>
+          <CardTitle className="text-neutral-900 dark:text-white">Savings Details</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-2xl font-bold text-neutral-900 dark:text-white">
-            Total Investments: ${totalSavings.toFixed(2)}
+            Total Savings: ${totalSavings.toFixed(2)}
           </p>
           <p className="text-neutral-600 dark:text-neutral-400 mt-2">
             Based on your actual savings across all budgets.
@@ -93,7 +93,7 @@ export default function Dashboard() {
                   <p className="text-neutral-600 dark:text-neutral-400">Expenses: ${budget.totalExpenses.toFixed(2)}</p>
                   <p className="text-neutral-600 dark:text-neutral-400">Savings Goal: ${budget.savingsGoal.toFixed(2)}</p>
                   <p className="text-neutral-600 dark:text-neutral-400">Actual Savings: ${budget.actualSavings.toFixed(2)}</p>
-                  <Button asChild>
+                  <Button asChild className='mt-3'>
                     <Link href={`/auth/budget-tracker/${budget.id}`}>View Details</Link>
                   </Button>
                 </CardContent>

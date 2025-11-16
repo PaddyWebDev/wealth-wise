@@ -42,6 +42,7 @@ export function AddExpenseForm({ budgetId }: AddIncomeExpenseProps) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['budgets'] });
       queryClient.invalidateQueries({ queryKey: ['expenses'] });
+      queryClient.invalidateQueries({ queryKey: ['budget', budgetId] });
       toast.success('Expense added successfully!');
       form.reset({
         category: "",

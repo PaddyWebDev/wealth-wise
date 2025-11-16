@@ -62,9 +62,23 @@ export async function POST(request: NextRequest) {
       where: { id: budgetId },
       data: {
         totalExpenses: { increment: parseFloat(amount) },
-        actualSavings: { decrement: parseFloat(amount) },
       },
     });
+
+    // Recalculate actualSavings as totalIncome - totalExpenses
+    const updatedBudget = await prisma.budget.findUnique({
+      where: { id: budgetId },
+      select: { totalIncome: true, totalExpenses: true },
+    });
+
+    if (updatedBudget) {
+      await prisma.budget.update({
+        where: { id: budgetId },
+        data: {
+          actualSavings: updatedBudget.totalIncome - updatedBudget.totalExpenses,
+        },
+      });
+    }
 
     return NextResponse.json(expense, { status: 201 });
   } catch (error) {
