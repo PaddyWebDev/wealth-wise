@@ -14,18 +14,18 @@ export default function Hero() {
       <div className="absolute bottom-20 left-10 w-96 h-96 bg-accent/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
 
       <div className="absolute top-32 left-20 animate-bounce" style={{ animationDelay: "0s" }}>
-        <div className="p-3 bg-white rounded-full shadow-lg border border-border">
-          <TrendingUp className="text-primary" size={24} />
+        <div className="p-3 bg-white  rounded-full shadow-lg border border-border">
+          <TrendingUp className=" dark:text-neutral-950" size={24} />
         </div>
       </div>
       <div className="absolute top-48 right-32 animate-bounce" style={{ animationDelay: "0.5s" }}>
         <div className="p-3 bg-white rounded-full shadow-lg border border-border">
-          <PieChart className="text-accent" size={24} />
+          <PieChart className="dark:text-neutral-950" size={24} />
         </div>
       </div>
       <div className="absolute bottom-32 left-1/4 animate-bounce" style={{ animationDelay: "1s" }}>
         <div className="p-3 bg-white rounded-full shadow-lg border border-border">
-          <Wallet className="text-primary" size={24} />
+          <Wallet className="dark:text-neutral-950" size={24} />
         </div>
       </div>
       <div className="absolute bottom-40 right-20 animate-bounce" style={{ animationDelay: "0.3s" }}>

@@ -19,6 +19,22 @@ export const loginSchema = z.object({
     }),
 });
 
+export const contactFormSchema = z.object({
+  name: z
+    .string()
+    .min(8, "Name Should be minimum 8 characters")
+    .max(55, "Name should be maximum 55 characters"),
+  email: z
+    .email()
+    .min(8, "Name Should be minimum 8 characters")
+    .max(55, "Name should be maximum 55 characters"),
+
+  message: z
+    .string()
+    .min(8, "Message Should be minimum 8 characters")
+    .max(255, "Message should be maximum 255 characters"),
+});
+
 export const registerSchema = z
   .object({
     email: z

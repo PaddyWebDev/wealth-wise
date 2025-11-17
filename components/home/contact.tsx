@@ -2,8 +2,33 @@
 
 import { Mail, Phone, MapPin } from "lucide-react"
 import { Button } from "../ui/button"
+import { useForm } from "react-hook-form"
+import z from "zod"
+import { contactFormSchema } from "@/lib/guest-form-schemas"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Form, FormField, FormControl, FormItem, FormMessage, FormLabel } from "../ui/form"
+import { Input } from "../ui/input"
+import React from "react"
+import { Textarea } from "../ui/textarea"
 
+
+export type contactFormType = z.infer<typeof contactFormSchema>
 export default function Contact() {
+  const [isPending, startTransition] = React.useTransition()
+  const contactForm = useForm<contactFormType>({
+    resolver: zodResolver(contactFormSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      message: ""
+    }
+  })
+
+  async function handleFormSubmit(data: contactFormType) {
+    startTransition(() => {
+      console.log(data);
+    })
+  }
   return (
     <section className="py-16 sm:py-20 bg-gradient-blue-white grid-pattern">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -18,51 +43,62 @@ export default function Contact() {
 
         <div className="grid md:grid-cols-2 gap-16 lg:gap-20">
           {/* Contact Form */}
-          <div className="fade-in-up">
-            <form className="space-y-8">
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  placeholder="Your name"
-                  className="w-full px-4 py-3 bg-white border border-border rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all"
+          <div className="fade-in-up dark:bg-neutral-800/60 shadow-md p-3 rounded-md">
+            <Form {...contactForm}>
+              <form className="space-y-8" onSubmit={contactForm.handleSubmit(handleFormSubmit)}>
+                <FormField
+                  control={contactForm.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="John Doe" disabled={isPending} {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+
                 />
-              </div>
+                <FormField
+                  control={contactForm.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input placeholder="johndoe@example.com" disabled={isPending} {...field} />
+                      </FormControl>
+                      <FormMessage />
 
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  placeholder="your@email.com"
-                  className="w-full px-4 py-3 bg-white border border-border rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all"
+                    </FormItem>
+                  )}
+
                 />
-              </div>
+                <FormField
+                  control={contactForm.control}
+                  name="message"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Message</FormLabel>
+                      <FormControl>
+                        <Textarea placeholder="Type your message here." disabled={isPending} {...field} />
 
-              <div>
-                <label htmlFor="message" className="block text-sm font-medium text-foreground mb-2">
-                  Message
-                </label>
-                <textarea
-                  id="message"
-                  rows={4}
-                  placeholder="Your message..."
-                  className="w-full px-4 py-3 bg-white border border-border rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all resize-none"
-                ></textarea>
-              </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
 
-              <Button
-                type="submit"
-                className="w-full px-6 py-3  rounded-lg font-semibold hover:shadow-lg hover:shadow-primary/30 transition-all duration-300"
-              >
-                Send Message
-              </Button>
-            </form>
+                />
+
+
+                <Button
+                  disabled={isPending}
+                >
+                  {isPending ? "Sending..." : "Send Message"}
+                </Button>
+              </form>
+            </Form>
           </div>
 
           {/* Contact Info */}

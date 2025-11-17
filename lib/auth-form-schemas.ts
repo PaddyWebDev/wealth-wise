@@ -88,5 +88,62 @@ export const recommendSchema = z.object({
 
   category: z.string().min(1, "Category is required"),
 });
+export const recommendLumpSumSchema = z.object({
+  min_lumpsum: z
+    .string()
+    .regex(
+      /^(1000|[1-9]\d{3}|[12]\d{4}|30000)$/,
+      "Lumpsum must be between ₹1000 and ₹30000"
+    ),
+  required_return: z
+    .string()
+    .regex(
+      /^(?:[1-9](?:\.\d+)?|[12][0-9](?:\.\d+)?|30(?:\.0+)?)$/,
+      "Please enter a valid return between 1% and 30%"
+    )
+    .min(1, "Minimum return should be at least 1%")
+    .max(30, "Maximum allowed return is 30%")
+    .refine(
+      (str) => Number(str) >= 1 && Number(str) <= 30,
+      "Return must be valid number between 1 and 30"
+    ),
+
+  risk_level: z.string().min(1, "Risk level is required"),
+
+  category: z.string().min(1, "Category is required"),
+});
 
 export type recommendationFormType = z.infer<typeof recommendSchema>;
+export type recommendationLumpSumFormType = z.infer<
+  typeof recommendLumpSumSchema
+>;
+
+export const mutualFundsCalculatorSchema = z.object({
+  investmentType: z.enum(["lumpsum", "sip"]),
+  principalAmount: z
+    .string()
+    .min(1, "Principal amount is required")
+    .regex(/^\d+(\.\d{1,2})?$/, "Enter a valid amount")
+    .refine((val) => parseFloat(val) > 0, "Amount must be greater than 0"),
+  monthlySip: z.string().optional(),
+  annualReturnRate: z
+    .string()
+    .min(1, "Annual return rate is required")
+    .regex(/^\d+(\.\d{1,2})?$/, "Enter a valid percentage")
+    .refine((val) => parseFloat(val) >= 0 && parseFloat(val) <= 50, "Rate must be between 0% and 50%"),
+  timePeriod: z
+    .string()
+    .min(1, "Time period is required")
+    .regex(/^\d+$/, "Enter a valid number of years")
+    .refine((val) => parseInt(val) > 0 && parseInt(val) <= 50, "Period must be between 1 and 50 years"),
+}).refine((data) => {
+  if (data.investmentType === "sip" && (!data.monthlySip || parseFloat(data.monthlySip) <= 0)) {
+    return false;
+  }
+  return true;
+}, {
+  message: "Monthly SIP is required for SIP investment",
+  path: ["monthlySip"],
+});
+
+export type MutualFundsCalculatorFormType = z.infer<typeof mutualFundsCalculatorSchema>;

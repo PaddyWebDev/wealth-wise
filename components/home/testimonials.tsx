@@ -28,7 +28,7 @@ export default function Testimonials() {
   ]
 
   return (
-    <section className="py-20 sm:py-32 bg-background">
+    <section className="py-20 sm:py-32 dark:bg-neutral-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-16 fade-in-up">
@@ -44,7 +44,7 @@ export default function Testimonials() {
           {testimonials.map((testimonial, i) => (
             <div
               key={i}
-              className="scale-in bg-white rounded-xl shadow-sm border border-border p-8 hover:shadow-lg hover:border-primary/50 transition-all duration-300"
+              className="scale-in bg-neutral-50 dark:bg-neutral-800 rounded-xl shadow-sm border border-border p-8 hover:shadow-lg hover:border-primary/50 transition-all duration-300"
               style={{ animationDelay: `${i * 150}ms` }}
             >
               {/* Stars */}
