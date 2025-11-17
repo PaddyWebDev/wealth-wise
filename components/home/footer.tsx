@@ -13,12 +13,12 @@ export default function Footer() {
           {/* Logo */}
           <div className="md:col-span-1">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg dark:text-neutral-950">₹</span>
+              <div className="w-10 h-10 bg-primary rounded-lg flex items-center dark:bg-neutral-800 bg-neutral-50 justify-center">
+                <span className="font-bold text-lg text-neutral-50 ">₹</span>
               </div>
               <span className="font-bold text-lg">WealthWise</span>
             </div>
-            <p className="text-sm text-white/70">Your intelligent personal finance companion.</p>
+            <p className="text-sm dark:text-white/70">Your intelligent personal finance companion.</p>
           </div>
 
           {/* Links */}
@@ -28,7 +28,7 @@ export default function Footer() {
               <ul className="space-y-2">
                 {links.map((link) => (
                   <li key={link}>
-                    <a href="#" className="text-sm text-white/70 hover:text-white transition-colors">
+                    <a href="#" className="text-sm dark:text-white/70 dark:hover:text-white transition-colors">
                       {link}
                     </a>
                   </li>
@@ -42,10 +42,10 @@ export default function Footer() {
         <div className="border-t border-white/10 pt-8">
           {/* Bottom Footer */}
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-white/70">© 2025 WealthMind. All rights reserved.</p>
+            <p className="text-sm dark:text-white/70">© 2025 WealthMind. All rights reserved.</p>
             <div className="flex gap-6">
               {["Twitter", "LinkedIn", "Facebook", "Instagram"].map((social) => (
-                <a key={social} href="#" className="text-white/70 hover:text-white transition-colors text-sm">
+                <a key={social} href="#" className="dark:text-white/70 dark:hover:text-white transition-colors text-sm">
                   {social}
                 </a>
               ))}

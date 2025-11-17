@@ -1,5 +1,0 @@
-- [x] 1. Update app/api/incomes/route.ts: Recalculate actualSavings after adding income.
-- [x] 2. Update app/api/expenses/route.ts: Recalculate actualSavings after adding expense.
-- [x] 3. Update components/budget-tracker/AddIncomeForm.tsx: Add invalidation for ['budget', budgetId].
-- [x] 4. Update components/budget-tracker/AddExpenseForm.tsx: Add invalidation for ['budget', budgetId].
-- [ ] 5. Test additions and verify real-time updates and correct savings calculation.
