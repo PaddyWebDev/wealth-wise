@@ -1,16 +1,15 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/auth';
-import prisma from '@/lib/prisma';
+import { NextRequest, NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const userId = request.nextUrl.searchParams.get("userId");
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const budgets = await prisma.budget.findMany({
-      where: { user: { email: session.user.email } },
+      where: { userId: userId },
       include: {
         incomes: true,
         expenses: true,
@@ -19,35 +18,33 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(budgets);
   } catch (error) {
-    console.error('Error fetching budgets:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    console.error("Error fetching budgets:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
 
-
-
-
 export async function POST(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
     const body = await request.json();
-    const { month, totalIncome, totalExpenses, savingsGoal, actualSavings } = body;
+    const {
+      userId,
+      month,
+      totalIncome,
+      totalExpenses,
+      savingsGoal,
+      actualSavings,
+    } = body;
 
-    const user = await prisma.user.findUnique({
-      where: { email: session.user.email },
-    });
-
-    if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    if (!userId) {
+      return NextResponse.json({ error: "userId required" }, { status: 400 });
     }
 
     const budget = await prisma.budget.create({
       data: {
-        userId: user.id,
+        userId,
         month,
         totalIncome: totalIncome || 0,
         totalExpenses: totalExpenses || 0,
@@ -58,7 +55,10 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(budget, { status: 201 });
   } catch (error) {
-    console.error('Error creating budget:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    console.error("Error creating budget:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }

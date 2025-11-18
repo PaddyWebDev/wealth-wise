@@ -120,6 +120,7 @@ export default function Login() {
 
                         <div className="grid grid-cols-2 gap-2">
                             <Button
+                                disabled
                                 className='flex items-center '
                                 onClick={() => handleSocialLogin("google")}
                                 type="button"
@@ -128,6 +129,7 @@ export default function Login() {
 
                             </Button>
                             <Button
+                                disabled
                                 type="button"
                                 className='flex items-center '
                                 onClick={() => handleSocialLogin("github")}

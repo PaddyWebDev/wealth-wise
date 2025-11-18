@@ -118,32 +118,95 @@ export type recommendationLumpSumFormType = z.infer<
   typeof recommendLumpSumSchema
 >;
 
-export const mutualFundsCalculatorSchema = z.object({
-  investmentType: z.enum(["lumpsum", "sip"]),
-  principalAmount: z
+export const mutualFundsCalculatorSchema = z
+  .object({
+    investmentType: z.enum(["lumpsum", "sip"]),
+    principalAmount: z
+      .string()
+      .min(1, "Principal amount is required")
+      .regex(/^\d+(\.\d{1,2})?$/, "Enter a valid amount")
+      .refine((val) => parseFloat(val) > 0, "Amount must be greater than 0"),
+    monthlySip: z.string().optional(),
+    annualReturnRate: z
+      .string()
+      .min(1, "Annual return rate is required")
+      .regex(/^\d+(\.\d{1,2})?$/, "Enter a valid percentage")
+      .refine(
+        (val) => parseFloat(val) >= 0 && parseFloat(val) <= 50,
+        "Rate must be between 0% and 50%"
+      ),
+    timePeriod: z
+      .string()
+      .min(1, "Time period is required")
+      .regex(/^\d+$/, "Enter a valid number of years")
+      .refine(
+        (val) => parseInt(val) > 0 && parseInt(val) <= 50,
+        "Period must be between 1 and 50 years"
+      ),
+  })
+  .refine(
+    (data) => {
+      if (
+        data.investmentType === "sip" &&
+        (!data.monthlySip || parseFloat(data.monthlySip) <= 0)
+      ) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: "Monthly SIP is required for SIP investment",
+      path: ["monthlySip"],
+    }
+  );
+
+export type MutualFundsCalculatorFormType = z.infer<
+  typeof mutualFundsCalculatorSchema
+>;
+
+export const editExpenseSchema = z.object({
+  category: z
     .string()
-    .min(1, "Principal amount is required")
-    .regex(/^\d+(\.\d{1,2})?$/, "Enter a valid amount")
-    .refine((val) => parseFloat(val) > 0, "Amount must be greater than 0"),
-  monthlySip: z.string().optional(),
-  annualReturnRate: z
+    .min(1, "Category is required")
+    .max(40, "Category must be only 40 characters only"),
+  amount: z
     .string()
-    .min(1, "Annual return rate is required")
-    .regex(/^\d+(\.\d{1,2})?$/, "Enter a valid percentage")
-    .refine((val) => parseFloat(val) >= 0 && parseFloat(val) <= 50, "Rate must be between 0% and 50%"),
-  timePeriod: z
-    .string()
-    .min(1, "Time period is required")
-    .regex(/^\d+$/, "Enter a valid number of years")
-    .refine((val) => parseInt(val) > 0 && parseInt(val) <= 50, "Period must be between 1 and 50 years"),
-}).refine((data) => {
-  if (data.investmentType === "sip" && (!data.monthlySip || parseFloat(data.monthlySip) <= 0)) {
-    return false;
-  }
-  return true;
-}, {
-  message: "Monthly SIP is required for SIP investment",
-  path: ["monthlySip"],
+    .min(1, "Amount is required")
+    .regex(
+      /^(?!0*(?:\.0+)?$)\d+(\.\d+)?$/,
+      "Amount must be a valid positive number"
+    ),
+  date: z.string().min(1, "Date is required"),
 });
 
-export type MutualFundsCalculatorFormType = z.infer<typeof mutualFundsCalculatorSchema>;
+export const editIncomeSchema = z.object({
+  source: z
+    .string()
+    .min(1, "Source is required")
+    .max(40, "Source must be only 40 characters only"),
+  amount: z
+    .string()
+    .min(1, "Amount is required")
+    .regex(
+      /^(?!0*(?:\.0+)?$)\d+(\.\d+)?$/,
+      "Amount must be a valid positive number"
+    ),
+  date: z.string().min(1, "Date is required"),
+});
+
+export type EditExpenseFormData = z.infer<typeof editExpenseSchema>;
+export type EditIncomeFormData = z.infer<typeof editIncomeSchema>;
+
+export const addBudgetSchema = z.object({
+  month: z
+    .string()
+    .min(1, 'Month is required')
+    .regex(/^\d{4}-\d{2}$/, 'Month must be in YYYY-MM format')
+    .refine((val) => {
+      const [year, month] = val.split('-').map(Number);
+      return month >= 1 && month <= 12;
+    }, 'Invalid month'),
+  savingsGoal: z.number().min(0, 'Savings goal must be non-negative').optional(),
+});
+
+export type AddBudgetFormData = z.infer<typeof addBudgetSchema>;

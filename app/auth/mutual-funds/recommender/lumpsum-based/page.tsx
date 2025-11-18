@@ -81,7 +81,7 @@ export default function RecommendPage() {
     }
 
     return (
-        <section className="w-full h-full flex items-center justify-center flex-col">
+        <section className="w-full h-full flex items-center justify-center flex-col bg-neutral-50 dark:bg-neutral-950 ">
             <Card className="w-full max-w-2xl mx-auto bg-neutral-200/50 dark:bg-neutral-800 p-4 rounded-md shadow-xl ">
                 <CardTitle className="text-3xl font-bold text-center my-3">
                     Mutual Funds Recommendation System

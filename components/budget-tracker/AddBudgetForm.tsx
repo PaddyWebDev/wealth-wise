@@ -3,42 +3,31 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { addBudgetSchema, type AddBudgetFormData } from '@/lib/auth-form-schemas';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-
-const formSchema = z.object({
-  month: z.string().min(1, 'Month is required (e.g., 2024-01)'),
-  totalIncome: z.number().min(0, 'Total income must be non-negative').optional(),
-  totalExpenses: z.number().min(0, 'Total expenses must be non-negative').optional(),
-  savingsGoal: z.number().min(0, 'Savings goal must be non-negative').optional(),
-});
-
-type FormData = z.infer<typeof formSchema>;
+import queryClient from '@/lib/tanstack-query';
+import { useState } from 'react';
+import { Plus } from 'lucide-react';
 
 export function AddBudgetForm() {
-  const form = useForm<FormData>({
-    resolver: zodResolver(formSchema),
+  const [isOpen, setIsOpen] = useState(false);
+  const form = useForm<AddBudgetFormData>({
+    resolver: zodResolver(addBudgetSchema),
     defaultValues: {
       month: '',
-      totalIncome: undefined,
-      totalExpenses: undefined,
       savingsGoal: undefined,
     },
   });
 
-  const queryClient = useQueryClient();
-
   const addBudgetMutation = useMutation({
-    mutationFn: async (data: FormData) => {
+    mutationFn: async (data: AddBudgetFormData) => {
       const response = await axios.post('/api/budgets', {
         month: data.month,
-        totalIncome: data.totalIncome || 0,
-        totalExpenses: data.totalExpenses || 0,
         savingsGoal: data.savingsGoal || 0,
         actualSavings: 0,
       });
@@ -48,22 +37,29 @@ export function AddBudgetForm() {
       queryClient.invalidateQueries({ queryKey: ['budgets'] });
       toast.success('Budget created successfully!');
       form.reset();
+      setIsOpen(false);
     },
     onError: () => {
       toast.error('Failed to create budget');
     },
   });
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = (data: AddBudgetFormData) => {
     addBudgetMutation.mutate(data);
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Create Your First Budget</CardTitle>
-      </CardHeader>
-      <CardContent>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <Button >
+          <Plus className="w-4 h-4 "/>
+          Create Budget
+        </Button>
+      </DialogTrigger>
+      <DialogContent className=' bg-neutral-100 dark:bg-neutral-800'>
+        <DialogHeader>
+          <DialogTitle>Create New Budget</DialogTitle>
+        </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
@@ -71,47 +67,9 @@ export function AddBudgetForm() {
               name="month"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Month (e.g., 2024-01)</FormLabel>
+                  <FormLabel>Month (YYYY-MM)</FormLabel>
                   <FormControl>
                     <Input placeholder="2024-01" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="totalIncome"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Total Income (Optional)</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      step="0.01"
-                      placeholder="0.00"
-                      {...field}
-                      onChange={(e) => field.onChange(parseFloat(e.target.value) || undefined)}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="totalExpenses"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Total Expenses (Optional)</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      step="0.01"
-                      placeholder="0.00"
-                      {...field}
-                      onChange={(e) => field.onChange(parseFloat(e.target.value) || undefined)}
-                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -141,7 +99,7 @@ export function AddBudgetForm() {
             </Button>
           </form>
         </Form>
-      </CardContent>
-    </Card>
+      </DialogContent>
+    </Dialog>
   );
 }

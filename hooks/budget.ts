@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { auth } from "@/auth";
+import { getSessionUser } from "./user";
 
 export async function getBudgetById(budgetId: string) {
   return await prisma.budget.findUnique({
@@ -24,13 +25,14 @@ export async function getBudgetById(budgetId: string) {
 }
 
 export async function getAllBudgets() {
-  const session = await auth();
-  if (!session?.user?.email) {
-    throw new Error("Unauthorized");
+  const session = await getSessionUser();
+
+  if(!session?.user){
+    throw new Error("Unauthorized User")
   }
 
   const budgets = await prisma.budget.findMany({
-    where: { user: { email: session.user.email } },
+    where: { userId: session?.user.id },
     include: {
       incomes: true,
       expenses: true,

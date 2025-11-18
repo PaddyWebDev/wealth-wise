@@ -13,7 +13,7 @@ const archivo = Archivo({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "WealthWise",
   description:
-    "Notezzy is a note taking application built with Next.js 14 and Tailwind CSS.",
+    "Wealth Wise is a financial assistant app.",
 };
 
 export default function RootLayout({
@@ -24,21 +24,19 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={archivo.className}>
-        <SessionProvider>
-          <SidebarProvider>
-            <QueryClientProvider client={queryClient}>
-              <ThemeProvider
-                attribute="class"
-                defaultTheme="system"
-                enableSystem
-              // disableTransitionOnChange
-              >
-                <Toaster position="top-right" reverseOrder={false} />
-                {children}
-              </ThemeProvider>
-            </QueryClientProvider>
-          </SidebarProvider>
-        </SessionProvider>
+        <SidebarProvider>
+          <QueryClientProvider client={queryClient}>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+            // disableTransitionOnChange
+            >
+              <Toaster position="top-right" reverseOrder={false} />
+              {children}
+            </ThemeProvider>
+          </QueryClientProvider>
+        </SidebarProvider>
       </body>
     </html>
   );

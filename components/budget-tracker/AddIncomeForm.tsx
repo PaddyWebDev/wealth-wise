@@ -12,13 +12,14 @@ import { addIncomeSchema, type AddIncomeFormData } from '@/lib/auth-form-schemas
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { Budget } from '@prisma/client';
+import queryClient from '@/lib/tanstack-query';
+import { useSessionContext } from '@/context/session';
 
 export interface AddIncomeExpenseProps {
   budgetId: string
 }
 export function AddIncomeForm({ budgetId }: AddIncomeExpenseProps) {
-  const queryClient = useQueryClient();
-
+  const { session } = useSessionContext()
   const form = useForm<AddIncomeFormData>({
     resolver: zodResolver(addIncomeSchema),
     defaultValues: {
@@ -32,6 +33,7 @@ export function AddIncomeForm({ budgetId }: AddIncomeExpenseProps) {
     mutationFn: async (data: any) => {
       const response = await axios.post('/api/incomes', {
         budgetId: budgetId,
+        userId: session?.user.id,
         ...data
       });
       return response.data;

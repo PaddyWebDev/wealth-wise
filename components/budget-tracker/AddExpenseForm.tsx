@@ -13,10 +13,12 @@ import toast from 'react-hot-toast';
 import React from 'react';
 import { AddExpenseFormData, addExpenseSchema } from '@/lib/auth-form-schemas'
 import { AddIncomeExpenseProps } from './AddIncomeForm';
+import { useSessionContext } from '@/context/session';
 
 
 
 export function AddExpenseForm({ budgetId }: AddIncomeExpenseProps) {
+  const { session } = useSessionContext();
   const [isPending, startTransition] = React.useTransition();
   const form = useForm<AddExpenseFormData>({
     resolver: zodResolver(addExpenseSchema),
@@ -33,6 +35,7 @@ export function AddExpenseForm({ budgetId }: AddIncomeExpenseProps) {
     mutationFn: async (data: AddExpenseFormData) => {
       const response = await axios.post('/api/expenses', {
         budgetId: budgetId,
+        userId: session?.user.id,
         ...data,
         amount: data.amount,
         date: data.date || undefined,

@@ -5,6 +5,8 @@ import { BudgetOverview } from '@/components/budget-tracker/BudgetOverview';
 import { AddIncomeForm } from '@/components/budget-tracker/AddIncomeForm';
 import { AddExpenseForm } from '@/components/budget-tracker/AddExpenseForm';
 import { SingleBudgetCharts } from '@/components/budget-tracker/SingleBudgetCharts';
+import { ExpenseList } from '@/components/budget-tracker/ExpenseList';
+import { IncomeList } from '@/components/budget-tracker/IncomeList';
 import Loader from '@/components/Loader';
 import { useParams, useRouter } from 'next/navigation';
 import { getBudgetById } from '@/hooks/budget';
@@ -47,11 +49,11 @@ export default function BudgetTracker() {
     }
 
     return (
-        <section className="min-h-screen bg-neutral-50 dark:bg-neutral-900 p-6">
+        <section className="min-h-screen bg-neutral-50 dark:bg-neutral-950 p-6">
             <div className="max-w-7xl mx-auto space-y-6">
                 <div className="flex justify-between items-center">
                     <h1 className="text-3xl font-bold text-neutral-900 dark:text-white">Budget for {budget.month}</h1>
-                    <Button onClick={() => router.push("/auth/dashboard")} className="bg-neutral-800 hover:bg-neutral-700 text-white">Back to Dashboard</Button>
+                    <Button onClick={() => router.push("/auth/dashboard")} >Back to Dashboard</Button>
                 </div>
 
                 {/* Budget Overview */}
@@ -67,10 +69,10 @@ export default function BudgetTracker() {
                     </CardHeader>
                     <CardContent>
                         <p className="text-2xl font-bold text-neutral-900 dark:text-white">
-                            Actual Savings: ${budget.actualSavings.toFixed(2)}
+                            Actual Savings: ₹{budget.actualSavings.toFixed(2)}
                         </p>
                         <p className="text-neutral-600 dark:text-neutral-400 mt-2">
-                            Savings Goal: ${budget.savingsGoal.toFixed(2)}
+                            Savings Goal: ₹{budget.savingsGoal.toFixed(2)}
                         </p>
                     </CardContent>
                 </Card>
@@ -78,6 +80,12 @@ export default function BudgetTracker() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <AddIncomeForm budgetId={Id as string} />
                     <AddExpenseForm budgetId={Id as string} />
+                </div>
+
+                {/* Expense List */}
+                <div className='grid  md:grid-cols-2 gap-3'>
+                    <ExpenseList budgetId={Id as string} />
+                    <IncomeList budgetId={Id as string} />
                 </div>
 
             </div>

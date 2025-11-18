@@ -45,10 +45,10 @@ export default function Dashboard() {
   const totalSavings = budgets?.reduce((sum, b) => sum + b.actualSavings, 0) || 0;
 
   return (
-    <div className="p-6 space-y-6 bg-neutral-50 dark:bg-neutral-900 min-h-screen">
+    <section className="p-6 space-y-6 bg-neutral-50 dark:bg-neutral-950 min-h-screen">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold text-neutral-900 dark:text-white">Dashboard</h1>
-      
+
       </div>
 
       {/* Investment Details */}
@@ -58,7 +58,7 @@ export default function Dashboard() {
         </CardHeader>
         <CardContent>
           <p className="text-2xl font-bold text-neutral-900 dark:text-white">
-            Total Savings: ${totalSavings.toFixed(2)}
+            Total Savings: ₹{totalSavings.toFixed(2)}
           </p>
           <p className="text-neutral-600 dark:text-neutral-400 mt-2">
             Based on your actual savings across all budgets.
@@ -89,34 +89,45 @@ export default function Dashboard() {
                   <CardTitle className="text-neutral-900 dark:text-white">{budget.month}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-neutral-600 dark:text-neutral-400">Income: ${budget.totalIncome.toFixed(2)}</p>
-                  <p className="text-neutral-600 dark:text-neutral-400">Expenses: ${budget.totalExpenses.toFixed(2)}</p>
-                  <p className="text-neutral-600 dark:text-neutral-400">Savings Goal: ${budget.savingsGoal.toFixed(2)}</p>
-                  <p className="text-neutral-600 dark:text-neutral-400">Actual Savings: ${budget.actualSavings.toFixed(2)}</p>
+                  <p className="text-neutral-600 dark:text-neutral-400">Income: ₹{budget.totalIncome.toFixed(2)}</p>
+                  <p className="text-neutral-600 dark:text-neutral-400">Expenses: ₹{budget.totalExpenses.toFixed(2)}</p>
+                  <p className="text-neutral-600 dark:text-neutral-400">Savings Goal: ₹{budget.savingsGoal.toFixed(2)}</p>
+                  <p className="text-neutral-600 dark:text-neutral-400">Actual Savings: ₹{budget.actualSavings.toFixed(2)}</p>
                   <Button asChild className='mt-3'>
                     <Link href={`/auth/budget-tracker/${budget.id}`}>View Details</Link>
                   </Button>
                 </CardContent>
               </Card>
             ))}
+            {budgets && budgets.length > 0 && (
+              <section>
+                <h2 className="text-2xl font-semibold text-neutral-900 dark:text-white mb-4">Add New Budget</h2>
+                <AddBudgetForm />
+              </section>
+            )}
           </div>
         ) : (
-          <Card className="bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700">
-            <CardContent className="flex flex-col items-center justify-center py-12">
-              <p className="text-neutral-500 dark:text-neutral-400 mb-4">No budgets found. Create your first budget to get started.</p>
-              <AddBudgetForm />
-            </CardContent>
-          </Card>
+          <div>
+            <Card className="bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700">
+              <CardContent className="flex flex-col items-center justify-center py-12">
+                <p className="text-neutral-500 dark:text-neutral-400 mb-4">No budgets found. Create your first budget to get started.</p>
+                <AddBudgetForm />
+              </CardContent>
+            </Card>
+
+            {budgets && budgets.length > 0 && (
+              <section>
+                <h2 className="text-2xl font-semibold text-neutral-900 dark:text-white mb-4">Add New Budget</h2>
+                <AddBudgetForm />
+              </section>
+            )}
+          </div>
         )}
+
+
       </section>
 
-      {/* Add Budget Form */}
-      {budgets && budgets.length > 0 && (
-        <section>
-          <h2 className="text-2xl font-semibold text-neutral-900 dark:text-white mb-4">Add New Budget</h2>
-          <AddBudgetForm />
-        </section>
-      )}
-    </div>
+
+    </section>
   );
 }

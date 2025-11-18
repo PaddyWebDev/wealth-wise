@@ -16,7 +16,7 @@ export function BudgetOverview({ budgets }: BudgetOverviewProps) {
             <CardTitle className="text-neutral-600 dark:text-neutral-400">Total Income</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold text-neutral-900 dark:text-white">$0</p>
+            <p className="text-3xl font-bold text-neutral-900 dark:text-white">₹0</p>
           </CardContent>
         </Card>
         <Card className="bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700">
@@ -24,7 +24,7 @@ export function BudgetOverview({ budgets }: BudgetOverviewProps) {
             <CardTitle className="text-neutral-600 dark:text-neutral-400">Total Expenses</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold text-neutral-900 dark:text-white">$0</p>
+            <p className="text-3xl font-bold text-neutral-900 dark:text-white">₹0</p>
           </CardContent>
         </Card>
         <Card className="bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700">
@@ -32,7 +32,7 @@ export function BudgetOverview({ budgets }: BudgetOverviewProps) {
             <CardTitle className="text-neutral-600 dark:text-neutral-400">Savings Goal</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold text-neutral-900 dark:text-white">$0</p>
+            <p className="text-3xl font-bold text-neutral-900 dark:text-white">₹0</p>
           </CardContent>
         </Card>
         <Card className="bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700">
@@ -40,7 +40,7 @@ export function BudgetOverview({ budgets }: BudgetOverviewProps) {
             <CardTitle className="text-neutral-600 dark:text-neutral-400">Actual Savings</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold text-neutral-900 dark:text-white">$0</p>
+            <p className="text-3xl font-bold text-neutral-900 dark:text-white">₹0</p>
           </CardContent>
         </Card>
       </div>
@@ -60,7 +60,7 @@ export function BudgetOverview({ budgets }: BudgetOverviewProps) {
           <CardTitle className="text-neutral-600 dark:text-neutral-400">Total Income</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-3xl font-bold text-neutral-900 dark:text-white">${totalIncome.toFixed(2)}</p>
+          <p className="text-3xl font-bold text-neutral-900 dark:text-white">₹{totalIncome.toFixed(2)}</p>
         </CardContent>
       </Card>
       <Card className="bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700">
@@ -68,7 +68,7 @@ export function BudgetOverview({ budgets }: BudgetOverviewProps) {
           <CardTitle className="text-neutral-600 dark:text-neutral-400">Total Expenses</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-3xl font-bold text-neutral-900 dark:text-white">${totalExpenses.toFixed(2)}</p>
+          <p className="text-3xl font-bold text-neutral-900 dark:text-white">₹ {totalExpenses.toFixed(2)}</p>
         </CardContent>
       </Card>
       <Card className="bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700">
@@ -76,7 +76,7 @@ export function BudgetOverview({ budgets }: BudgetOverviewProps) {
           <CardTitle className="text-neutral-600 dark:text-neutral-400">Savings Goal</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-3xl font-bold text-neutral-900 dark:text-white">${totalSavingsGoal.toFixed(2)}</p>
+          <p className="text-3xl font-bold text-neutral-900 dark:text-white">₹{totalSavingsGoal.toFixed(2)}</p>
         </CardContent>
       </Card>
       <Card className="bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700">
@@ -84,7 +84,7 @@ export function BudgetOverview({ budgets }: BudgetOverviewProps) {
           <CardTitle className="text-neutral-600 dark:text-neutral-400">Actual Savings</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-3xl font-bold text-neutral-900 dark:text-white">${totalActualSavings.toFixed(2)}</p>
+          <p className="text-3xl font-bold text-neutral-900 dark:text-white">₹{totalActualSavings.toFixed(2)}</p>
         </CardContent>
       </Card>
     </div>
