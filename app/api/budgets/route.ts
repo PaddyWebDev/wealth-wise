@@ -5,7 +5,7 @@ export async function GET(request: NextRequest) {
   try {
     const userId = request.nextUrl.searchParams.get("userId");
     if (!userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return new NextResponse("User id is required", { status: 400 });
     }
 
     const budgets = await prisma.budget.findMany({
@@ -18,11 +18,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(budgets);
   } catch (error) {
-    console.error("Error fetching budgets:", error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
+    return new NextResponse("Internal Server Error", { status: 500 });
   }
 }
 
@@ -32,33 +28,24 @@ export async function POST(request: NextRequest) {
     const {
       userId,
       month,
-      totalIncome,
-      totalExpenses,
       savingsGoal,
-      actualSavings,
     } = body;
 
     if (!userId) {
-      return NextResponse.json({ error: "userId required" }, { status: 400 });
+      return new NextResponse("User id is required", { status: 400 });
     }
 
     const budget = await prisma.budget.create({
       data: {
         userId,
         month,
-        totalIncome: totalIncome || 0,
-        totalExpenses: totalExpenses || 0,
         savingsGoal: savingsGoal || 0,
-        actualSavings: actualSavings || 0,
       },
     });
 
     return NextResponse.json(budget, { status: 201 });
   } catch (error) {
     console.error("Error creating budget:", error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
+    return new NextResponse("Internal Server Error", { status: 500 });
   }
 }

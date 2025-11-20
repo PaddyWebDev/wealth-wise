@@ -144,7 +144,7 @@ export function IncomeList({ budgetId }: IncomeListProps) {
               <div key={income.id} className="flex items-center justify-between p-4 bg-white dark:bg-neutral-950 rounded-lg border border-neutral-200 dark:border-neutral-700">
                 <div>
                   <p className="font-medium text-neutral-900 dark:text-white">{income.source}</p>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-400">${income.amount.toFixed(2)}</p>
+                  <p className="text-sm text-neutral-600 dark:text-neutral-400">₹{income.amount.toFixed(2)}</p>
                   <p className="text-xs text-neutral-500 dark:text-neutral-500">{new Date(income.date).toLocaleDateString()}</p>
                 </div>
                 <div className="flex space-x-2">

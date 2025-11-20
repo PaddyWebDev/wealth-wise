@@ -13,11 +13,11 @@ export default function About() {
             <div className="relative h-80 sm:h-96">
               <div className="w-full h-full bg-gradient-blue-white rounded-2xl shadow-2xl border-2 border-primary/20 overflow-hidden flex items-center justify-center">
                 <Image
-                  width={100}
-                  height={100}
-                  src="/home/financial-planning-investment-dashboard-portfolio-.jpg"
+                  width={500}
+                  height={500}
+                  src="/img.png"
                   alt="Financial Dashboard"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-center"
                 />
               </div>
               <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-accent/10 rounded-lg blur-xl"></div>

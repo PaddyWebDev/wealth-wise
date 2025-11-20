@@ -3,9 +3,9 @@ import prisma from "@/lib/prisma";
 
 export async function GET(request: NextRequest) {
   try {
-    const userId = request.nextUrl.searchParams.get('userId');
+    const userId = request.nextUrl.searchParams.get("userId");
     if (!userId) {
-      return NextResponse.json({ error: "userId required" }, { status: 400 });
+      return new NextResponse("UserId is required", { status: 400 });
     }
 
     const incomes = await prisma.income.findMany({
@@ -16,10 +16,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(incomes);
   } catch (error) {
     console.error("Error fetching incomes:", error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
+    return new NextResponse("Internal Server Error", { status: 500 });
   }
 }
 
@@ -29,7 +26,7 @@ export async function POST(request: NextRequest) {
     const { userId, budgetId, source, amount, date } = body;
 
     if (!userId) {
-      return NextResponse.json({ error: "userId required" }, { status: 400 });
+      return new NextResponse("UserId is required", { status: 400 });
     }
 
     const budget = await prisma.budget.findFirst({
@@ -40,10 +37,9 @@ export async function POST(request: NextRequest) {
     });
 
     if (!budget) {
-      return NextResponse.json(
-        { error: "Budget not found or unauthorized" },
-        { status: 404 }
-      );
+      return new NextResponse("Budget not found or unauthorized", {
+        status: 404,
+      });
     }
 
     const income = await prisma.income.create({
@@ -73,7 +69,8 @@ export async function POST(request: NextRequest) {
       await prisma.budget.update({
         where: { id: budgetId },
         data: {
-          actualSavings: updatedBudget.totalIncome - updatedBudget.totalExpenses,
+          actualSavings:
+            updatedBudget.totalIncome - updatedBudget.totalExpenses,
         },
       });
     }
@@ -81,9 +78,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(income, { status: 201 });
   } catch (error) {
     console.error("Error creating income:", error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
+    return new NextResponse("Internal Server Error", { status: 500 });
   }
 }

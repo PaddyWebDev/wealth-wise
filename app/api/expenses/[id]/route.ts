@@ -8,7 +8,7 @@ export async function DELETE(
   try {
     const userId = request.nextUrl.searchParams.get("userId");
     if (!userId) {
-      return NextResponse.json({ error: "userId required" }, { status: 400 });
+      return new NextResponse("UserId is required", { status: 400 });
     }
 
     const expenseId = params.id;
@@ -30,10 +30,9 @@ export async function DELETE(
     });
 
     if (!expense) {
-      return NextResponse.json(
-        { error: "Expense not found or unauthorized" },
-        { status: 404 }
-      );
+      return new NextResponse("Expense not found or unauthorized", {
+        status: 404,
+      });
     }
 
     // Delete the expense
@@ -65,16 +64,10 @@ export async function DELETE(
       });
     }
 
-    return NextResponse.json(
-      { message: "Expense deleted successfully" },
-      { status: 200 }
-    );
+    return new NextResponse("Expense deleted successfully", { status: 200 });
   } catch (error) {
     console.error("Error deleting expense:", error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
+    return new NextResponse("Internal Server Error", { status: 500 });
   }
 }
 
@@ -87,7 +80,7 @@ export async function PUT(
     const { category, amount, date } = await request.json();
 
     if (!userId) {
-      return NextResponse.json({ error: "userId required" }, { status: 400 });
+      return new NextResponse("UserId is required", { status: 400 });
     }
 
     const expenseId = params.id;
@@ -109,10 +102,9 @@ export async function PUT(
     });
 
     if (!existingExpense) {
-      return NextResponse.json(
-        { error: "Expense not found or unauthorized" },
-        { status: 404 }
-      );
+      return new NextResponse("Expense not found or unauthorized", {
+        status: 404,
+      });
     }
 
     // Update the expense
@@ -153,9 +145,6 @@ export async function PUT(
     return NextResponse.json(updatedExpense, { status: 200 });
   } catch (error) {
     console.error("Error updating expense:", error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
+    return new NextResponse("Internal Server Error", { status: 500 });
   }
 }

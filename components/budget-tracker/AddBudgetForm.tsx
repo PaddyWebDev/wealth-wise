@@ -14,7 +14,7 @@ import queryClient from '@/lib/tanstack-query';
 import { useState } from 'react';
 import { Plus } from 'lucide-react';
 
-export function AddBudgetForm() {
+export function AddBudgetForm({ userId }: { userId: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const form = useForm<AddBudgetFormData>({
     resolver: zodResolver(addBudgetSchema),
@@ -26,7 +26,8 @@ export function AddBudgetForm() {
 
   const addBudgetMutation = useMutation({
     mutationFn: async (data: AddBudgetFormData) => {
-      const response = await axios.post('/api/budgets', {
+      const response = await axios.post(`/api/budgets`, {
+        userId: userId,
         month: data.month,
         savingsGoal: data.savingsGoal || 0,
         actualSavings: 0,
@@ -52,7 +53,7 @@ export function AddBudgetForm() {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button >
-          <Plus className="w-4 h-4 "/>
+          <Plus className="w-4 h-4 " />
           Create Budget
         </Button>
       </DialogTrigger>

@@ -92,8 +92,8 @@ export default function Hero() {
             <div className="relative w-full h-full flex items-center justify-center">
               <div className="w-full h-full bg-gradient-blue-white rounded-2xl shadow-2xl border-2 border-primary/20 overflow-hidden flex items-center justify-center">
                 <Image
-                  width={100}
-                  height={100}
+                  width={500}
+                  height={500}
                   src="/home/financial-dashboard-analytics-charts-investment-po.jpg"
                   alt="Financial Dashboard"
                   className="w-full h-full object-cover"

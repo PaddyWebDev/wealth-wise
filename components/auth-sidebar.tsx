@@ -118,7 +118,7 @@ export default function Sidebar({ userId, userName }: SidebarProps) {
                   Update Password
                 </Link>
                 <Link
-                  href={`/auth/profile/view-recommendations`}
+                  href={`/auth/financial-profile`}
                   className={cn(
                     "px-3 py-2 rounded-md flex items-center gap-2 text-sm font-medium transition-colors",
                     pathname === `/auth/profile/update-password/${userId}`
@@ -129,7 +129,7 @@ export default function Sidebar({ userId, userName }: SidebarProps) {
                   <span>
                     <Lightbulb />
                   </span>
-                  View Recommendations
+                  Financial Profile
                 </Link>
               </>
             ) : (

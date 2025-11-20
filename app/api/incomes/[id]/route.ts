@@ -2,17 +2,22 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
-    const userId = request.nextUrl.searchParams.get('userId');
+    const userId = request.nextUrl.searchParams.get("userId");
     if (!userId) {
-      return NextResponse.json({ error: "userId required" }, { status: 400 });
+      return new NextResponse("UserId is required", { status: 400 });
     }
 
     const incomeId = params.id;
 
     if (!incomeId) {
-      return NextResponse.json({ error: "Income ID required" }, { status: 400 });
+      return new NextResponse("Income ID required", {
+        status: 400,
+      });
     }
 
     // Find the income and ensure it belongs to the user
@@ -25,7 +30,9 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     });
 
     if (!income) {
-      return NextResponse.json({ error: "Income not found or unauthorized" }, { status: 404 });
+      return new NextResponse("Income not found or unauthorized", {
+        status: 404,
+      });
     }
 
     // Delete the income
@@ -51,34 +58,41 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       await prisma.budget.update({
         where: { id: income.budgetId },
         data: {
-          actualSavings: updatedBudget.totalIncome - updatedBudget.totalExpenses,
+          actualSavings:
+            updatedBudget.totalIncome - updatedBudget.totalExpenses,
         },
       });
     }
 
-    return NextResponse.json({ message: "Income deleted successfully" }, { status: 200 });
+    return NextResponse.json(
+      { message: "Income deleted successfully" },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Error deleting income:", error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
+    return new NextResponse("Internal Server Error", { status: 500 });
   }
 }
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
     const body = await request.json();
     const { userId, source, amount, date } = body;
 
     if (!userId) {
-      return NextResponse.json({ error: "userId required" }, { status: 400 });
+      return new NextResponse("UserId is required", { status: 400 });
     }
 
     const incomeId = params.id;
 
     if (!incomeId) {
-      return NextResponse.json({ error: "Income ID required" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Income ID required" },
+        { status: 400 }
+      );
     }
 
     // Find the income and ensure it belongs to the user
@@ -91,7 +105,9 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     });
 
     if (!existingIncome) {
-      return NextResponse.json({ error: "Income not found or unauthorized" }, { status: 404 });
+      return new NextResponse("Income not found or unauthorized", {
+        status: 404,
+      });
     }
 
     // Update the income
@@ -123,7 +139,8 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       await prisma.budget.update({
         where: { id: existingIncome.budgetId },
         data: {
-          actualSavings: updatedBudget.totalIncome - updatedBudget.totalExpenses,
+          actualSavings:
+            updatedBudget.totalIncome - updatedBudget.totalExpenses,
         },
       });
     }
@@ -131,9 +148,6 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     return NextResponse.json(updatedIncome, { status: 200 });
   } catch (error) {
     console.error("Error updating income:", error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
+    return new NextResponse("Internal Server Error", { status: 500 });
   }
 }

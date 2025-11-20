@@ -3,9 +3,9 @@ import prisma from "@/lib/prisma";
 
 export async function GET(request: NextRequest) {
   try {
-    const userId = request.nextUrl.searchParams.get('userId');
+    const userId = request.nextUrl.searchParams.get("userId");
     if (!userId) {
-      return NextResponse.json({ error: "userId required" }, { status: 400 });
+      return new NextResponse("UserId is required", { status: 400 });
     }
 
     const expenses = await prisma.expense.findMany({
@@ -15,13 +15,12 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(expenses);
   } catch (error) {
-    console.error("Error fetching expenses:", error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
+    return new NextResponse("Internal Server Error", { status: 500 });
   }
 }
+
+
+
 
 export async function POST(request: NextRequest) {
   try {
@@ -29,7 +28,7 @@ export async function POST(request: NextRequest) {
     const { userId, budgetId, category, amount, date } = body;
 
     if (!userId) {
-      return NextResponse.json({ error: "userId required" }, { status: 400 });
+      return new NextResponse("userId required", { status: 400 });
     }
 
     const budget = await prisma.budget.findFirst({
@@ -40,10 +39,9 @@ export async function POST(request: NextRequest) {
     });
 
     if (!budget) {
-      return NextResponse.json(
-        { error: "Budget not found or unauthorized" },
-        { status: 404 }
-      );
+      return new NextResponse("Budget not found or unauthorized", {
+        status: 404,
+      });
     }
 
     const expense = await prisma.expense.create({
@@ -73,7 +71,8 @@ export async function POST(request: NextRequest) {
       await prisma.budget.update({
         where: { id: budgetId },
         data: {
-          actualSavings: updatedBudget.totalIncome - updatedBudget.totalExpenses,
+          actualSavings:
+            updatedBudget.totalIncome - updatedBudget.totalExpenses,
         },
       });
     }
@@ -81,9 +80,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(expense, { status: 201 });
   } catch (error) {
     console.error("Error creating expense:", error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
+    return new NextResponse("Internal Server Error", { status: 500 });
   }
 }

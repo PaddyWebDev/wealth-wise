@@ -9,8 +9,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useSessionContext } from '@/context/session';
 
 export default function Dashboard() {
+  const { session } = useSessionContext();
   const { data: budgets, isLoading, error } = useQuery({
     queryKey: ['budgets'],
     queryFn: async () => await getAllBudgets(),
@@ -102,7 +104,7 @@ export default function Dashboard() {
             {budgets && budgets.length > 0 && (
               <section>
                 <h2 className="text-2xl font-semibold text-neutral-900 dark:text-white mb-4">Add New Budget</h2>
-                <AddBudgetForm />
+                <AddBudgetForm userId={session?.user.id!} />
               </section>
             )}
           </div>
@@ -111,14 +113,14 @@ export default function Dashboard() {
             <Card className="bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700">
               <CardContent className="flex flex-col items-center justify-center py-12">
                 <p className="text-neutral-500 dark:text-neutral-400 mb-4">No budgets found. Create your first budget to get started.</p>
-                <AddBudgetForm />
+                <AddBudgetForm userId={session?.user.id!} />
               </CardContent>
             </Card>
 
             {budgets && budgets.length > 0 && (
               <section>
                 <h2 className="text-2xl font-semibold text-neutral-900 dark:text-white mb-4">Add New Budget</h2>
-                <AddBudgetForm />
+                <AddBudgetForm userId={session?.user.id!} />
               </section>
             )}
           </div>
