@@ -21,6 +21,21 @@ enum PersonalityType {
   SAVER
 }
 
+enum GoalCategory {
+  RETIREMENT
+  HOUSE
+  EDUCATION
+  EMERGENCY_FUND
+  VACATION
+  OTHER
+}
+
+enum GoalStatus {
+  ACTIVE
+  ACHIEVED
+  ABANDONED
+}
+
 model User {
   id                 String               @id @default(cuid())
   name               String
@@ -36,6 +51,7 @@ model User {
   Budget             Budget[]
   ChatMessage        ChatMessage[]
   FinancialProfile   FinancialProfile?
+  Goal               Goal[]
 
   @@map("users")
 }
@@ -77,6 +93,27 @@ model Budget {
   expenses      Expense[]
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
+
+  @@index([userId])
+}
+
+// ------------------------------
+// Goal Model
+// ------------------------------
+model Goal {
+  id            String      @id @default(cuid())
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  title         String
+  description   String?
+  targetAmount  Float
+  currentAmount Float       @default(0)
+  deadline      DateTime?
+  category      GoalCategory
+  status        GoalStatus  @default(ACTIVE)
+  strategies    Json?       // AI-generated strategies
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
 
   @@index([userId])
 }

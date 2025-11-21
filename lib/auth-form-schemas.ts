@@ -210,3 +210,24 @@ export const addBudgetSchema = z.object({
 });
 
 export type AddBudgetFormData = z.infer<typeof addBudgetSchema>;
+
+export const goalPlanningSchema = z.object({
+  goalName: z.string().min(1, "Goal name is required").max(100, "Goal name must be less than 100 characters"),
+  targetAmount: z
+    .string()
+    .min(1, "Target amount is required")
+    .regex(/^\d+(\.\d{1,2})?$/, "Enter a valid amount")
+    .refine((val) => parseFloat(val) > 0, "Amount must be greater than 0"),
+  timeframeMonths: z
+    .string()
+    .min(1, "Timeframe is required")
+    .regex(/^\d+$/, "Enter a valid number of months")
+    .refine((val) => parseInt(val) > 0, "Timeframe must be at least 1 month"),
+  currentSavings: z
+    .string()
+    .min(1, "Current savings is required")
+    .regex(/^\d+(\.\d{1,2})?$/, "Enter a valid amount")
+    .refine((val) => parseFloat(val) >= 0, "Savings must be non-negative"),
+});
+
+export type GoalPlanningFormData = z.infer<typeof goalPlanningSchema>;
