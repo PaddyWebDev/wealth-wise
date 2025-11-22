@@ -6,7 +6,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -59,6 +58,7 @@ export default function GoalPlanning() {
                 const response = await axios.post(`/api/goal-planning?userId=${session?.user.id}`, data);
                 setResult(response.data);
                 toast.success('Goal planning completed successfully!');
+                form.reset();
             } catch (error: any) {
                 toast.error(error.response?.data?.error || 'An error occurred while planning your goal');
                 console.error('Goal planning error:', error);

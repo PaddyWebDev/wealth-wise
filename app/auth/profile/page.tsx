@@ -4,8 +4,13 @@ import React from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useSessionContext } from '@/context/session'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { fetchUserById } from '@/hooks/user'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { CheckCircle, XCircle, Clock, Target } from 'lucide-react'
+import axios from 'axios'
+import toast from 'react-hot-toast'
 
 export default function ProfilePage() {
   const { session } = useSessionContext()

@@ -15,6 +15,7 @@ import { Button } from "./ui/button";
 import { SignOutUser } from "@/hooks/user";
 import {
   Calculator,
+  Goal,
   Home,
   Info,
   Lightbulb,
@@ -22,6 +23,7 @@ import {
   LucideIcon,
   MessageCircleMore,
   Search,
+  Shield,
   User,
   UserCog,
   UserPen,
@@ -47,12 +49,11 @@ export default function Sidebar({ userId, userName }: SidebarProps) {
   const links: linksType[] = [
     { href: "/auth/dashboard", label: "Dashboard", icon: Home },
     { href: "/auth/investment-chat", label: "ChatBot", icon: MessageCircleMore },
-    {
-      href: "/auth/mutual-funds/recommender/sip-based", label: "Sip Recommendation", icon: Info
-    },
+    { href: "/auth/mutual-funds/recommender/sip-based", label: "Sip Recommendation", icon: Info },
     { href: "/auth/mutual-funds/recommender/lumpsum-based", label: "LumpSum Recommendation", icon: Wand2 },
     { href: "/auth/mutual-funds/investment-calculator", label: "Investment Calculator", icon: Calculator },
-
+    { href: "/auth/credit-risk", label: "Credit Risk", icon: Shield },
+    { href: "/auth/goal-planning", label: "Goal Planning", icon: Goal },
   ];
 
   return (
