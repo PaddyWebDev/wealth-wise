@@ -20,13 +20,40 @@ export async function POST(request: NextRequest) {
         status: 400,
       });
     }
-    if (
-      await checkUserExistsByEmailAndPhoneNumber(data.email, data.phoneNumber)
-    ) {
-      return new NextResponse("User already Exists", {
+
+    const checkUserExistWithEmail = await prisma.user.findUnique({
+      where: {
+        email: data.email,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    const checkUserExistWithPhoneNumber = await prisma.user.findUnique({
+      where: {
+        phoneNumber: data.phoneNumber,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (checkUserExistWithEmail) {
+      return new NextResponse("This email already exists in the system", {
         status: 409,
       });
     }
+
+    if (checkUserExistWithPhoneNumber) {
+      return new NextResponse(
+        "This phone number already exists in the system",
+        {
+          status: 409,
+        }
+      );
+    }
+
     await prisma.user.create({
       data: {
         name: data.name,

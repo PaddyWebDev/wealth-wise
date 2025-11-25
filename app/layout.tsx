@@ -12,8 +12,7 @@ const archivo = Archivo({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "WealthWise",
-  description:
-    "Wealth Wise is a financial assistant app.",
+  description: "Wealth Wise is a financial assistant app.",
 };
 
 export default function RootLayout({
@@ -23,21 +22,23 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={archivo.className}>
-        <SidebarProvider>
-          <QueryClientProvider client={queryClient}>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-            // disableTransitionOnChange
-            >
-              <Toaster position="top-right" reverseOrder={false} />
-              {children}
-            </ThemeProvider>
-          </QueryClientProvider>
-        </SidebarProvider>
-      </body>
+      <SessionProvider>
+        <body className={archivo.className}>
+          <SidebarProvider>
+            <QueryClientProvider client={queryClient}>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                // disableTransitionOnChange
+              >
+                <Toaster position="top-right" reverseOrder={false} />
+                {children}
+              </ThemeProvider>
+            </QueryClientProvider>
+          </SidebarProvider>
+        </body>
+      </SessionProvider>
     </html>
   );
 }
